@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ category.title }} | {% endblock %}
+
+{% block content %}
+    <div class="columns is-multiline">
+        <div class="column is-12">
+            <h1 class="title">{{ category.title }}</h1>
+        </div>
+
+        {% for subcategory in category.subcategory.all %}
+            {% for subsubcategory in subcategory.all %}
+                {% for product in subsubcategory.products.all %}
+                    {% include 'product/parts/list_item.html' %}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}

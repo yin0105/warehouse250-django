@@ -1,0 +1,102 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Vendor Dashboard | {{ vendor.company_name }} - {% endblock %}
+
+{% block content %}
+    <div class="box">
+        <h1 class="title">Vendor Dashboard - {{ vendor.company_name }}</h1>
+        
+        <strong>TIN: </strong> {{ vendor.company_code }}<br>
+        <strong>Phone: </strong> {{ vendor.phone }}<br>
+        <strong>E-mail: </strong> {{ vendor.email }}<br>
+        <strong>Address: </strong> {{ vendor.address }}<br>
+        
+        <hr>
+
+        <strong>My balance: </strong>Frw {{ vendor.get_balance }}<br>
+        <strong>My paid amount: </strong>Frw {{ vendor.get_paid_amount }}
+
+        <hr>
+
+    </div>
+
+    <div class="box">
+        <h2 class="is-size-3 mb-4">My products</h2>
+
+        <a href="{% url 'add_product' %}" class="button is-dark mb-6">Add product</a>
+
+        {% if products %}
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td><a href="{% url 'product' product.category.sub_category.category.slug product.category.sub_category.slug product.category.slug product.slug %}">{{ product.title }}</a></td>
+                            <td>Frw {{ product.price }}</td>
+                            <td><a href="{% url 'edit_product' product.id %}">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You don't have any products yet...</p>
+        {% endif %}
+    </div>
+
+    <div class="box">
+        <h2 class="is-size-3 mb-4">My orders</h2>
+    
+        {% if orders %}
+            {% for order in orders %}
+                <div class="{% if order.fully_paid %}has-background-success-light{% else %}has-background-info-light{% endif %} mb-2 p-4">
+                    <div class="columns is-multiline">
+                        <div class="column is-6">
+                            <h3 class="is-size-4">#{{ order.id }} - {{ order.first_name }} {{ order.last_name }}</h3>
+                        </div>
+    
+                        <div class="column is-12">
+                            <b>Name:</b> {{ order.first_name }} {{ order.last_name }}<br>
+                            <b>Address:</b> {{ order.address }}<br>
+                            <b>E-mail:</b> {{ order.email }}<br>
+                            <b>Phone:</b> {{ order.phone }} <br>
+                            <b>Created at:</b> {{ order.created_at }}
+    
+                            <table class="table is-fullwidth mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Paid</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                        {% if item.vendor == request.user.vendor %}
+                                            <tr>
+                                                <td>{{ item.product.title }}</td>
+                                                <td>Frw {{ item.product.price }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
+                                                <td>Frw {{ item.get_total_price }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

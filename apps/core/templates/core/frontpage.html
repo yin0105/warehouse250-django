@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Welcome | {% endblock %}
+
+{% block content %}
+
+    <section class="hero is-medium is-dark">
+        <div class="hero-body">
+                <div class="container has-text-centered">
+                    <p class="title">
+                        WELCOME TO WAREHOUSE250
+                    </p>
+                     <p class="subtitle">
+                        Design & Construction Solutions
+                    </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="columns is-multiline mb-2">
+        <div class="column is-12 mt-5 mb-2">
+            <h2 class="title has-text-centered">Popular products</h2>
+        </div>
+
+        {% for product in popular_products %}
+            {% include 'product/parts/list_item.html' %}
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    <div class="columns is-multiline mb-2">
+        <div class="column is-12 mt-2 mb-2">
+            <h2 class="title has-text-centered">Featured products</h2>
+        </div>
+
+        {% for product in featured_products %}
+            {% include 'product/parts/list_item.html' %}
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    <div class="featured-categories">
+       
+        {% for category in featured_categories %}
+            
+            <div class="column is-12 mt-2 mb-2">
+                <h2 class="title has-text-centered">Featured category - {{ category.title }}</h2>
+            </div>
+
+            <div class="columns is-multiline">
+                {% for product in category.products.all %}
+                    {% include 'product/parts/list_item.html' %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+     <hr>
+
+    <div class="columns is-multiline mb-2">
+        <div class="column is-12 mt-2 mb-2">
+            <h2 class="title has-text-centered">Latest products</h2>
+        </div>
+
+        {% for product in newest_products %}
+            {% include 'product/parts/list_item.html' %}
+        {% endfor %}
+    </div>
+
+     <div class="columns is-multiline mb-2">
+        <div class="column is-12 mt-2 mb-2">
+            <h2 class="title has-text-centered">Recently viewed products</h2>
+        </div>
+
+        {% for product in recently_viewed_products %}
+            {% include 'product/parts/list_item.html' %}
+        {% endfor %}
+    </div>
+
+{% endblock %}
+

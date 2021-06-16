@@ -1,0 +1,125 @@
+{% extends 'core/base.html' %}
+{% load mathfilters %}
+
+{% block title %}Payment Info | {% endblock %}
+
+{% block content %}
+    <h1 class="title">Payment Info</h1>
+    <div class="table">
+        <table class="table is-fullwidth is-striped">
+            <thead>
+                <th></th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </thead>
+
+            <tbody>
+                {% for item in cart %}
+                    {% if item.product %}
+                    <tr>
+                        <td>
+                            <figure >
+                                <img src="{{ item.product.get_thumbnail }}" class="image is-64x64">
+                            </figure>
+                        </td>
+                        <td>
+                            {{ item.product.title }}
+                        </td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+                        <td>Frw {{ item.total_price }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td><strong>Subtotal cost</strong></td>
+                    <td><strong>{{ cart|length }}</strong></td>
+                    <td><strong>Frw {{ cart.get_total_cost|sub:cart.get_delivery_cost }}</strong></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><strong>Delivery cost</strong></td>
+                    <td></td>
+                    <td><strong>Frw {{ cart.get_delivery_cost }}</strong></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><strong>Total cost</strong></td>
+                    <td><strong>{{ cart|length }}</strong></td>
+                    <td><strong>Frw {{ cart.get_total_cost }}</strong></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><strong>Delivery address</strong></td>
+                    <td>{{ cart.get_delivery_address }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <form method="post" action="" id="payment-form">
+        {% csrf_token %}  
+
+        <div id="card-element">
+            <!-- A Stripe Element will be inserted here -->
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="notification is-danger">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="field">
+            <div class="control">
+                <button class="button is-dark mt-4">Confirm Order</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('{{ stripe_pub_key }}');
+        var elements = stripe.elements();
+
+        var card = elements.create('card');
+
+        card.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    stripeTokenHandler(result.token);
+                }
+            });
+            stripeTokenHandler("");
+        });
+
+        function stripeTokenHandler(token) {
+            console.log("stripeTokenHandler");
+            var form = document.getElementById('payment-form');
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripe_token');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+
+            form.submit();
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,5 @@
+env/
+doc/
+apps/*/__pycache__/
+apps/*/*/__pycache__/
+warehouse250/__pycache__/

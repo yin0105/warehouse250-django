@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+
+{% load product_extras %}
+
+{% block title %}{{ product.title }} | {% endblock %}
+
+{% block content %}
+
+    <div class="columns">
+        <div class="column is-6">
+            {% if product.image %}
+                <figure class="image is-4by3 mb-6">
+                    <img src="{{ product.image.url }}">
+                </figure>
+            {% endif %}
+        </div>
+
+        <div class="column is-6">
+            <h1 class="title">{{ product.title }}, Frw {{ product.price }}</h1>
+
+            <p class="mb-6"><span class="tag is-dark">{{ product.vendor.company_name }}</span></p>
+
+            <p>{{ product.description|convert_markdown|safe }}</p>
+
+            <br>
+
+            {% if product.in_cart %}
+                <p><strong>Product added to cart</strong></p>
+            {% else %}
+                {% if product.num_available > 0 %}
+                    <form method="post" action=".">
+                        {% csrf_token %}
+
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input type="number" name="quantity" value="1" class="input" min="1">
+                            </div>
+
+                            <div class="control">
+                                <button class="button is-dark">Add to cart</button>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    <p><strong>Out of Stock</strong></p>
+                {% endif %}
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="notification is-success is-toast">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+
+
+            {% if similar_products %}
+                <hr>
+
+                <div class="columns is-multiline">
+                    <div class="column is-12">
+                        <h2 class="subtitle">Similar products</h2>
+                    </div>
+
+                    {% for product in similar_products %}
+                        {% include 'product/parts/list_item.html' %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    
+{% endblock %}

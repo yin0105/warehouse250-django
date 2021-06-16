@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My account | {{ request.session.username }} - {% endblock %}
+
+{% block content %}
+    <h1 class="title">My account - {{ request.session.username }}</h1>
+
+    <hr>
+
+    <h2 class="subtitle">Account information</h2>
+    
+    <p><strong>Name: </strong>{{ request.session.username }}</p>
+    <p><strong>E-mail: </strong>{{ request.user.email }}</p>
+    <p><strong>Address: </strong>{{ request.session.address }}</p>
+    <p><strong>Phone: </strong>{{ request.session.phone}}</p>
+
+    <hr>
+
+    <h2 class="subtitle">My orders</h2>
+
+    {% for order in request.session.orders %}
+        <article class="message is-light">
+            <div class="message-header">
+                <p>{{ order.created_at }}</p>
+                <p><strong>Status: </strong>{{ order.status }}</p>
+            </div>
+
+            <div class="message-body">
+                <table class="table is-striped is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in order.items %}
+                            <tr>
+                                <td>{{ item.product_title }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.price }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>Products subtotal</td>
+                            <td>{{ order.total_quantity }}</td>
+                            <td>{{ order.subtotal_amount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Delivery cost</td>
+                            <td> </td>
+                            <td>{{ order.delivery_cost }}</td>
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td>Grand total</td>
+                            <td>{{ order.total_quantity }}</td>
+                            <td>{{ order.paid_amount }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </article>
+    {% empty %}
+        <p>You don't have any order yet.</p>
+    {% endfor %}
+{% endblock %}

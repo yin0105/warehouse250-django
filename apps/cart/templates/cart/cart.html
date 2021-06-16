@@ -1,0 +1,133 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cart | {% endblock %}
+
+{% block content %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $quantity_dict = {};
+        function add_quantity(item_id, delta) {
+            delta = parseInt(delta);
+            $elem_quantity = $("#quantity_" + item_id);
+            $quantity = parseInt($elem_quantity.text().trim());
+
+            $elem_price = $elem_quantity.parent().parent().children().eq(3)
+            $cur_item_price_arr = $elem_price.text().split(" ");
+            $cur_item_price = $cur_item_price_arr[$cur_item_price_arr.length - 1];
+            $cur_item_price_prefix = $cur_item_price_arr.slice(0, $cur_item_price_arr.length - 1).join(" ");
+            $price = $cur_item_price / $quantity;
+
+            $elem_total_row = $elem_price.parent().parent().parent().find("tfoot").find("tr");
+            $elem_total_arr = $elem_total_row.children().eq(3).text().split(" ");
+            $elem_total = parseFloat($elem_total_arr[$elem_total_arr.length - 1]) + $price * delta;
+            $elem_total_prefix = $elem_total_arr.slice(0, $elem_total_arr.length - 1).join(" ");
+            console.log($elem_total_row);
+
+            $quantity += delta;
+            if ($quantity < 0) return;
+
+            $elem_quantity.text($quantity);
+            $elem_price.text($cur_item_price_prefix + " " + $price * $quantity);
+            console.log($elem_total_row.children().eq(3).text());
+
+            $elem_total_row.children().eq(2).text(parseFloat($elem_total_row.children().eq(2).text()) + delta);
+            $elem_total_row.children().eq(3).text($elem_total_prefix + " " + $elem_total);
+            
+            $quantity_dict[item_id] = $quantity;
+        }
+
+        function handleClick() {
+            $id_quantity = "";
+            $rows = $("table").children("tbody").first().children("tr");
+            $rows.each(function( index ) {
+                $elem_quantity = $( this ).children("td").eq(2).children("span").first();
+                $elem_id = $elem_quantity.attr("id").split("_")[1];
+                $elem_amount = $elem_quantity.text().trim();
+                if ($id_quantity != "") {
+                    $id_quantity += ":"                    
+                }
+                $id_quantity += $elem_id + "_" + $elem_amount;
+            });
+
+            document.myform.id_quantity.value = $id_quantity
+            console.log(document.myform.id_quantity.value);
+            document.myform.submit();
+        }
+    </script>
+    <h1 class="title">Cart</h1>
+
+    {% if cart %}
+        <div class="box mb-6">
+            <form method="post" action="." name="myform">
+                {% csrf_token %} 
+                <input type="hidden" name="id_quantity" id="id_quantity" value="aa_1"/>
+                <div class="table">
+                    <table class="table is-fullwidth is-striped">
+                        <thead>
+                            <th></th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th></th>
+                        </thead>
+
+                        <tbody>
+                            {% for item in cart %}
+                                {% if item.product %}
+                                <tr>
+                                    <td>
+                                        <figure >
+                                            <img src="{{ item.product.get_thumbnail }}" class="image is-64x64">
+                                        </figure>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'product' item.product.category.sub_category.category.slug item.product.category.sub_category.slug item.product.category.slug item.product.slug %}">{{ item.product.title }}</a>
+                                    </td>
+                                    <td>
+                                    
+                                        <!-- <a href="?change_quantity={{ item.id }}&quantity=-1">-</a> -->
+                                        <a href="javascript:add_quantity({{ item.id }},-1);">-</a>
+                                        <span  id="quantity_{{ item.id }}">
+                                            {{ item.quantity }}
+                                        </span>
+                                        <!-- <a href="?change_quantity={{ item.id }}&quantity=1">+</a> -->
+                                        <a href="javascript:add_quantity({{ item.id }},1);">+</a>
+
+                                    </td>
+                                    <td>Frw {{ item.total_price }}</td>
+                                    <td><a href="?remove_from_cart={{ item.id }}" class="delete">Remove</a></td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td><strong>Total cost</strong></td>
+                                <td><strong>{{ cart|length }}</strong></td>
+                                <td><strong>Frw {{ cart.get_cart_cost }}</strong></td>
+                                <td><input type="button" class="button is-success" value="Order" onclick="handleClick()" /></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="notification is-danger is-toast">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% else %}
+        <section class="hero is-medium is-dark">
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <p class="subtitle">
+                        Your cart is currently empty. 
+                    </p>
+                </div>
+            </div>
+        </section>
+    {% endif %}    
+{% endblock %}

@@ -1,0 +1,32 @@
+<div class="column is-3 product-list-item">
+    <div class="box">
+
+        <figure class="image is-4by3 mb-4">
+            <a href="{% url 'product' product.category.sub_category.category.slug product.category.sub_category.slug product.category.slug product.slug %}">
+                <img src="{{ product.get_thumbnail }}">
+            </a>
+        </figure>
+
+        <h2 class="subtitle">{{ product.title }}</h2>
+
+        <h3 class="price is-size-6 mb-5">Frw {{ product.price }}</h3>
+
+        <form method="post" action=".">
+            {% csrf_token %}
+
+            <div class="field has-addons">
+                <div class="control">
+                    <input type="hidden" name="slug" value="{{ product.slug }}">
+                    <!-- <input type="number" name="quantity" value="1" class="input" min="1"> -->
+                </div>
+
+                <!-- <div class="control"> -->
+                    <button class="button is-dark is-fullwidth">Add to cart</button>
+                <!-- </div> -->
+            </div>
+        </form>
+        <!-- <a href="{% url 'product' product.category.sub_category.category.slug product.category.sub_category.slug product.category.slug product.slug %}" class="button is-dark is-fullwidth">Add to cart</a> -->
+    </div>
+</div>
+
+
