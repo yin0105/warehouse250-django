@@ -277,7 +277,7 @@ def edit_vendor(request):
 
 
 def vendors(request):
-    vendors = Vendor.objects.all()
+    vendors = Vendor.objects.filter(enabled=True)
 
     return render(request, 'vendor/vendors.html', {'vendors': vendors})
 

@@ -9,7 +9,9 @@
         </div>
 
         {% for product in category.products.all %}
-            {% include 'product/parts/list_item.html' %}
+            {% if product.vendor.enabled %}
+                {% include 'product/parts/list_item.html' %}
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

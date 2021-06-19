@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'apps.product',
     'apps.vendor',
     'apps.blog',
+    'apps.dashboard',
 
     'widget_tweaks',
     'crispy_forms',
@@ -162,7 +163,17 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'static',
+    BASE_DIR / 'dashboard/static',
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATIC_URL = '/static/'
+
+# # Extra places for collectstatic to find static files.
+# STATICFILES_DIRS = (
+#     os.path.join(CORE_DIR, 'core/static'),
+# )
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'

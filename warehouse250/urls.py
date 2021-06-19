@@ -37,8 +37,10 @@ urlpatterns = [
     path('cart/', include('apps.cart.urls')),
     path('blog/', include('apps.blog.urls')),
     path('api/add_subscriber/', api_add_subscriber, name='api_add_subscriber'),
+    path("dashboard/", include("apps.dashboard.urls")),
     path('', include('apps.core.urls')),
     path('', include('apps.product.urls')),
+    
 
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.view.sitemap'),
@@ -49,3 +51,5 @@ urlpatterns = [
          vendor_views.activate, name='activate'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+print(urlpatterns)

@@ -12,6 +12,7 @@ class Vendor(models.Model):
     address = models.CharField(max_length=255)
     phone = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
+    enabled = models.BooleanField(default=True)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 

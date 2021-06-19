@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib import admin
 
 from .models import Order, OrderItem
+from django.db.models import Subquery, Sum, OuterRef
 
 
 def order_name(obj):
@@ -46,6 +47,18 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['first_name', 'address']
     inlines = [OrderItemInline]
     actions = [admin_order_shipped, admin_order_arrived]
+
+    # def get_queryset(self, request):
+    #     qs = super(OrderAdmin, self).get_queryset(request)
+    #     qs = qs.annotate(
+    #         id = "",
+    #         order_name = "total",
+    #         # status = Subquery(FinishedGoodsItem.objects.filter(goods_item=OuterRef('pk'))\
+    #         #     .values('goods_item_id').annotate(sum=Sum('weight')).values('sum')[:1]),
+    #         status = "",
+    #         created_at = "",
+    #     )
+    #     return qs
 
 
 admin.site.register(Order, OrderAdmin)
