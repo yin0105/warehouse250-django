@@ -121,7 +121,9 @@ def subcategory(request, category_slug, subcategory_slug):
 
 def subsubcategory(request, category_slug, subcategory_slug, subsubcategory_slug):
     category = get_object_or_404(SubSubCategory, slug=subsubcategory_slug)
+    print("== category = ", category)
     products = Product.objects.filter(parent=None)
+    print("== products = ", products)
 
     if request.method == 'POST':
         cart = Cart(request)
