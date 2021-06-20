@@ -38,6 +38,7 @@ urlpatterns = [
     path('blog/', include('apps.blog.urls')),
     path('api/add_subscriber/', api_add_subscriber, name='api_add_subscriber'),
     path("dashboard/", include("apps.dashboard.urls")),
+    path('activate/<slug:uidb64>/<slug:token>/', vendor_views.activate, name='activate'),
     path('', include('apps.core.urls')),
     path('', include('apps.product.urls')),
     
@@ -45,10 +46,6 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.view.sitemap'),
 
-
-
-    path('activate/<slug:uidb64>/<slug:token>/',
-         vendor_views.activate, name='activate'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
