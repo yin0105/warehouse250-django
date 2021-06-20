@@ -78,6 +78,7 @@ class Product(models.Model):
     num_visits = models.IntegerField(default=0)
     last_visit = models.DateTimeField(blank=True, null=True)
     pickup_available = models.BooleanField(default=False)
+    visible = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-date_added']

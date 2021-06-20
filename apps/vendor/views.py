@@ -113,8 +113,6 @@ def logout_request(request):
 
 def email_user(who, subject, message, from_email=None, **kwargs):
     """Send an email to this user."""
-    print("#" * 80)
-    print(subject, message, from_email, [who.email], **kwargs)
     send_mail(subject, message, from_email, [who.email], **kwargs)
 
 
@@ -289,16 +287,13 @@ def vendor(request, vendor_id):
 
 
 def become_customer(request):
-    print("=========== become_customer")
     if request.user.is_authenticated:
         logout(request)
     
     if request.method == 'POST':
-        print("=============== POST")
         form = CustomerSignUpForm(request.POST)
 
         if form.is_valid():
-            print("=============== is_valid()")
             user = form.save()
             user.refresh_from_db()
 
@@ -340,5 +335,4 @@ def become_customer(request):
 
 @login_required
 def myaccount(request):
-    print("=====  request => ", request.user)
     return render(request, 'customer/myaccount.html')

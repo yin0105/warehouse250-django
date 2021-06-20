@@ -15,33 +15,29 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header card-header-primary">
-              <h4 class="card-title ">Vendors</h4>
+              <h4 class="card-title ">Customers</h4>
               <p class="card-category"> </p>
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table table-striped table-bvendored table-sm" id="vendorsTable">
+                <table class="table table table-striped table-bvendored table-sm" id="customersTable">
                   <thead class=" text-primary">
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Code</th>
                     <th>Email</th>
                     <th>Address</th>
                     <th>Phone</th>
-                    <th>Products</th>
-                    <th>Enabled</th>
+                    <th>Created</th>
                   </thead>
                   <tbody>
-                    {% for vendor in vendors %}
+                    {% for customer in customers %}
                       <tr>
-                        <td>{{ vendor.id }}</td>
-                        <td>{{ vendor.name }}</td>
-                        <td>{{ vendor.code }}</td>
-                        <td>{{ vendor.email }}</td>
-                        <td>{{ vendor.address }}</td>
-                        <td>{{ vendor.phone }}</td>
-                        <td>{{ vendor.products }}</td>
-                        <td>{{ vendor.enabled }}</td>
+                        <td>{{ customer.id }}</td>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>{{ customer.address }}</td>
+                        <td>{{ customer.phone }}</td>
+                        <td>{{ customer.created }}</td>
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -54,12 +50,4 @@
 
 {% endblock content %}
 
-<script>
-  $(document).ready(function () {
-    alert("ok");
-    console.log("ready");
-    $('#vendorsTable').DataTable();
-    $('.dataTables_length').addClass('bs-select');
-  });
-</script>
 {% block javascripts %}{% endblock javascripts %}

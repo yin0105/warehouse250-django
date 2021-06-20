@@ -68,7 +68,7 @@ def product(request, category_slug, subcategory_slug, subsubcategory_slug, produ
 
 def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
-    products = Product.objects.filter(parent=None)
+    products = Product.objects.filter(visible=True)
 
     if request.method == 'POST':
         cart = Cart(request)
@@ -94,7 +94,7 @@ def category(request, category_slug):
 
 def subcategory(request, category_slug, subcategory_slug):
     category = get_object_or_404(SubCategory, slug=subcategory_slug)
-    products = Product.objects.filter(parent=None)
+    products = Product.objects.filter(visible=True)
 
     if request.method == 'POST':
         cart = Cart(request)
@@ -121,9 +121,7 @@ def subcategory(request, category_slug, subcategory_slug):
 
 def subsubcategory(request, category_slug, subcategory_slug, subsubcategory_slug):
     category = get_object_or_404(SubSubCategory, slug=subsubcategory_slug)
-    print("== category = ", category)
-    products = Product.objects.filter(parent=None)
-    print("== products = ", products)
+    products = Product.objects.filter(visible=True)
 
     if request.method == 'POST':
         cart = Cart(request)
@@ -146,3 +144,4 @@ def subsubcategory(request, category_slug, subcategory_slug, subsubcategory_slug
             return redirect('subsubcategory', category_slug=category_slug, subcategory_slug=subcategory_slug, subsubcategory_slug=subsubcategory_slug)
 
     return render(request, 'product/subsubcategory.html', {'category': category, 'products': products})
+

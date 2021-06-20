@@ -25,7 +25,6 @@ def cart_detail(request):
             # messages.success(request, 'Thank you for your order')
             if "id_quantity" in request.POST:
                 for elem in request.POST["id_quantity"].split(":"):
-                    print("== elem = ", elem)
                     elem_id = elem.split("_")[0]
                     elem_quantity = elem.split("_")[1]
                     cart.set(elem_id, elem_quantity)
@@ -140,12 +139,10 @@ def district_sector_cell_village(request):
 
 def payment_check(request):
     cart = Cart(request)
-    print("================== payment_check")
     if request.method == 'POST':
         form = PaymentForm(request.POST)  # PaymentForm
 
         if form.is_valid():
-            print("== form is valid")
             stripe.api_key = settings.STRIPE_SECRET_KEY
 
             stripe_token = form.cleaned_data['stripe_token']

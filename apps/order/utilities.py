@@ -40,8 +40,6 @@ def notify_vendor(order):
         text_content = 'You have a new order!'
         html_content = render_to_string(
             'order/email_notify_vendor.html', {'order': order, 'vendor': vendor})
-        print("================= vendor")
-        print(html_content)
 
         msg = EmailMultiAlternatives(
             subject, text_content, from_email, [to_email], connection=connection)
@@ -52,17 +50,14 @@ def notify_vendor(order):
 
 
 def notify_customer(order):
-    print("==== notify_customer")
     connection = get_connection() # uses SMTP server specified in settings.py
     connection.open()
-    print("opened")
     from_email = settings.DEFAULT_EMAIL_FROM
     to_email = order.email
     subject = 'Order confirmation'
     text_content = 'Thank you for the order!'
     html_content = render_to_string(
         'order/email_notify_customer.html', {'order': order})
-    print("html_content = ", html_content)
 
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email], connection=connection)
     msg.attach_alternative(html_content, 'text/html')

@@ -14,7 +14,7 @@ from django.db.models.functions import Concat
 # from .forms import AddToCartForm, AddToCartInListForm
 # from .models import Category, SubCategory, SubSubCategory, Product
 from apps.order.models import Order, OrderItem
-from apps.vendor.models import Vendor
+from apps.vendor.models import Vendor, Customer
 from apps.product.models import Product
 
 from apps.cart.cart import Cart
@@ -36,8 +36,12 @@ def changeOrderStatus(request, id, val):
 
 def changeVendorEnalbed(request, id, val):
     Vendor.objects.filter(id=id).update(enabled=val)
-    return HttpResponse("")    
-
+    return HttpResponse("")   
+ 
+def changeProductVisible(request, id, val):
+    print(id, val)
+    Product.objects.filter(id=id).update(visible=val)
+    return HttpResponse("")   
 
 # @login_required(login_url="/login/")
 def pages(request):
@@ -51,7 +55,12 @@ def pages(request):
             context = page_orders(request)
         elif load_template == "vendors":
             context = page_vendors(request)
+        elif load_template == "customers":
+            context = page_customers(request)
+        elif load_template == "product_review":
+            context = page_product_review(request)
         context['segment'] = load_template
+
         
         html_template = loader.get_template( load_template + ".html")
         return HttpResponse(html_template.render(context, request))
@@ -61,10 +70,10 @@ def pages(request):
         html_template = loader.get_template( 'page-404.html' )
         return HttpResponse(html_template.render(context, request))
 
-    # except:
+    except:
     
-    #     html_template = loader.get_template( 'page-500.html' )
-    #     return HttpResponse(html_template.render(context, request))
+        html_template = loader.get_template( 'page-500.html' )
+        return HttpResponse(html_template.render(context, request))
 
 
 def page_orders(request):
@@ -86,7 +95,6 @@ def page_orders(request):
     # for user in users:
     #     daily_orders = Order.objects.filter(first_name__iexact=users[user]["f"], last_name__iexact=users[user]["l"], created_at__year=today.year, created_at__month=today.month, created_at__day=today.day).aggregate
     #     weekly_orders = Order.objects.filter(first_name__iexact=users[user]["f"], last_name__iexact=users[user]["l"], created_at__range=[start_week, end_week])
-    #     print("=== ", user, users[user], daily_orders)
     # o = Order.objects.extra(select={'username': Concat('first_name', Value(' '),  'last_name')}).annotate(count=Count('paid_amount'))
     # o = Order.objects.all().values("first_name", "last_name").annotate(count=Count('first_name'), amount=Sum('paid_amount')).order_by()
 
@@ -118,3 +126,43 @@ def page_vendors(request):
     context['vendors'] = vendor_list
     
     return context
+
+
+def page_customers(request):
+    context = {}
+    customers = Customer.objects.all()
+    customer_list = []
+    for customer in customers:
+        customer_list.append({"id": customer.user_id, "name": customer.customername, "email": customer.email, "address": customer.address, "phone": customer.phone, "created": customer.created_at})
+    context['customers'] = customer_list
+    
+    return context
+
+
+def page_product_review(request):
+    context = {}
+    products = Product.objects.filter(visible=False)
+    product_list = []
+    for product in products:
+        # print(product.category_id, product.category, product.category)
+        print(product.category_id, product.category, product.category.sub_category, product.category.sub_category.category)
+        product_list.append({"id": product.id, "title": product.title, "description": product.description, "price": product.price, "date_added": product.date_added, "image": product.image, "vendor": product.vendor.company_name, "slug": product.category.sub_category.category.slug + "/" + product.category.sub_category.slug + "/" + product.category.slug + "/" + product.slug, "main_category": product.category.sub_category.category.title, "sub_category": product.category.sub_category.title, "sub_sub_category": product.category.title, "num_available": product.num_available, "visible": product.visible})
+    context['products'] = product_list
+    
+    return context
+
+
+def product_admin(request, category_slug, subcategory_slug, subsubcategory_slug, product_slug):
+    cart = Cart(request)
+
+    product = get_object_or_404(
+        Product, category__slug=subsubcategory_slug, slug=product_slug)
+
+    cart = Cart(request)
+
+    if cart.has_product(product.id):
+        product.in_cart = True
+    else:
+        product.in_cart = False
+
+    return render(request, 'product/product_admin.html', {'product': product})

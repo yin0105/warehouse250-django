@@ -107,6 +107,11 @@
         {'label': 'disable', 'value': 'False'} ,
       ];
 
+      var visible_list = [
+        {'label': 'visible', 'value': 'True'} ,
+        {'label': 'hidden', 'value': 'False'} ,
+      ];
+
       function changeOrderStatus(id, val) {
         $.ajax({
           type: "GET",
@@ -121,6 +126,16 @@
         $.ajax({
           type: "GET",
           url: "/dashboard/api/changeVendorEnalbed/" + id + "/"+ val,
+          success: function (data) {
+            console.log("ajax call success");
+          },
+        });
+      }
+      
+      function changeProductVisible(id, val) {
+        $.ajax({
+          type: "GET",
+          url: "/dashboard/api/changeProductVisible/" + id + "/"+ val,
           success: function (data) {
             console.log("ajax call success");
           },
@@ -199,13 +214,50 @@
               }
             ]
         });
-    $('.dataTables_length').addClass('bs-select');
 
-    
+// Customers
+    $("#customersTable").DataTable();
 
-    
-
+// Products
+$("#productsTable").DataTable({
+          "columns":[
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              {
+                  "render": function(d,t,r){
+                      var $select = $("<select onchange='changeProductVisible(" + r[0] + ", event.target.value)'></select>", {
+                          "id": r[0]+"start",
+                            "value": d
+                        });
+                      $.each(visible_list, function(k,v){
+                          var $option = $("<option></option>", {
+                              "text": v["label"],
+                              "value": v["value"]
+                            });
+                            if(d === v["value"]){
+                              $option.attr("selected", "selected")
+                            }
+                          $select.append($option);
+                        });
+                        return $select.prop("outerHTML");
+                    }
+              }
+            ],
+            columnDefs: [ {
+                targets: [ 0, ],
+                visible: false
+            } ], 
+            order: [[1, 'asc'],],
+        });
   </script>
+
+
+
   
 </body>
 </html>
