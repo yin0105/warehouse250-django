@@ -11,7 +11,7 @@ from .models import Vendor, Customer
 from apps.product.models import Product
 from apps.order.models import Order, OrderItem
 
-from .forms import ProductForm, VendorSignUpForm, CustomerSignUpForm
+from .forms import ProductForm, VendorSignUpForm, CustomerSignUpForm, RestorePasswordForm
 
 from django.utils.encoding import force_text
 
@@ -25,6 +25,11 @@ from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.mail import send_mail
+
+from django.contrib.auth.views import (
+    LogoutView as BaseLogoutView, PasswordChangeView as BasePasswordChangeView,
+    PasswordResetDoneView as BasePasswordResetDoneView, PasswordResetConfirmView as BasePasswordResetConfirmView,
+)
 
 
 def login_request(request):
@@ -336,3 +341,73 @@ def become_customer(request):
 @login_required
 def myaccount(request):
     return render(request, 'customer/myaccount.html')
+
+
+def restore_password(request):
+    if request.user.is_authenticated:
+        logout(request)
+    
+    if request.method == 'POST':
+        form = RestorePasswordForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()
+
+            user.username = user.first_name + " " + user.last_name
+
+            # user.is_active = False
+            # user.profile.email = form.cleaned_data.get('email')
+
+            # user.customer.customername = form.cleaned_data.get('customername')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            # user.save()
+            # Vendor.objects.last().delete()
+
+            current_site = get_current_site(request)
+            subject = 'Please Activate Your New Password'
+            # load a template like get_template()
+            # and calls its render() method immediately.
+            message = render_to_string('activation_restore_password.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                # method will generate a hash value with user related data
+                'token': account_activation_token.make_token(user),
+            })
+            email_user(user, subject, message)
+
+            messages.success(
+                request, ('Please check your email for verification'))
+
+            return redirect('activation_sent')
+    else:
+        form = RestorePasswordForm()
+
+    return render(request, 'vendor/restore_password.html', {'form': form})
+# class RestorePasswordView(GuestOnlyView, FormView):
+#     template_name = 'accounts/restore_password.html'
+
+#     @staticmethod
+#     def get_form_class(**kwargs):
+#         if settings.RESTORE_PASSWORD_VIA_EMAIL_OR_USERNAME:
+#             return RestorePasswordViaEmailOrUsernameForm
+
+#         return RestorePasswordForm
+
+#     def form_valid(self, form):
+#         user = form.user_cache
+#         token = default_token_generator.make_token(user)
+#         uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+#         if isinstance(uid, bytes):
+#             uid = uid.decode()
+
+#         send_reset_password_email(self.request, user.email, token, uid)
+
+#         return redirect('accounts:restore_password_done')
+
+# class RestorePasswordDoneView(BasePasswordResetDoneView):
+#     template_name = 'accounts/restore_password_done.html'

@@ -35,6 +35,11 @@ class VendorSignUpForm(UserCreationForm):
         ]
 
 # Customer Sign Up Form
+class RestorePasswordForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+
 class CustomerSignUpForm(UserCreationForm):
     customername = forms.CharField(max_length=32)
     address = forms.CharField(max_length=64, required=True)
