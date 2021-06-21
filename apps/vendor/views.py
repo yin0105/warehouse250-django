@@ -262,6 +262,9 @@ def add_product(request):
 
             return redirect('vendor_admin')
     else:
+        vendor = request.user.vendor
+        products = len(Product.objects.filter(vendor=vendor))
+        print(" vendor:: products  ", products, vendor.products_limit)
         form = ProductForm()
 
     return render(request, 'vendor/add_product.html', {'form': form})

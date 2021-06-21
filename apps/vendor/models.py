@@ -13,6 +13,7 @@ class Vendor(models.Model):
     phone = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
     enabled = models.BooleanField(default=True)
+    products_limit = models.IntegerField(default=0)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 

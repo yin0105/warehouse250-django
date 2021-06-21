@@ -142,6 +142,20 @@
         });
       }
 
+      function changeProductLimit(id, e, me) {
+        
+        val = me.value;
+        if (e.keyCode == 13) {
+          $.ajax({
+            type: "GET",
+            url: "/dashboard/api/changeProductLimit/" + id + "/"+ val,
+            success: function (data) {
+              console.log("ajax call success");
+            },
+          });
+        }
+      }
+
 // Orders
       $("#ordersTable").DataTable({
           "columns":[
@@ -193,6 +207,7 @@
               null,
               null,
               null,
+              null,
               {
                   "render": function(d,t,r){
                       var $select = $("<select onchange='changeVendorEnalbed(" + r[0] + ", event.target.value)'></select>", {
@@ -212,7 +227,11 @@
                         return $select.prop("outerHTML");
                     }
               }
-            ]
+            ],
+            // columnDefs: [{
+            //     orderable: false,
+            //     targets: [7, ]
+            // }]
         });
 
 // Customers

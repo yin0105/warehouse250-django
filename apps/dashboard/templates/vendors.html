@@ -29,6 +29,7 @@
                     <th>Address</th>
                     <th>Phone</th>
                     <th>Products</th>
+                    <th>Products Limit</th>
                     <th>Enabled</th>
                   </thead>
                   <tbody>
@@ -41,6 +42,7 @@
                         <td>{{ vendor.address }}</td>
                         <td>{{ vendor.phone }}</td>
                         <td>{{ vendor.products }}</td>
+                        <td><input type="text" id="limit_{{ vendor.id }}" name="limit_{{ vendor.id }}" value="{{vendor.limit }}"  maxlength="7" size="7" onkeypress="changeProductLimit('{{ vendor.id }}', event, this)"></td>
                         <td>{{ vendor.enabled }}</td>
                       </tr>
                     {% endfor %}
@@ -53,13 +55,4 @@
     </div>
 
 {% endblock content %}
-
-<script>
-  $(document).ready(function () {
-    alert("ok");
-    console.log("ready");
-    $('#vendorsTable').DataTable();
-    $('.dataTables_length').addClass('bs-select');
-  });
-</script>
 {% block javascripts %}{% endblock javascripts %}

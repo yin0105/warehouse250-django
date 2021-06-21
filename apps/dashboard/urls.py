@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/changeOrderStatus/<int:id>/<str:val>', views.changeOrderStatus, name='changeOrderStatus'),
     path('api/changeVendorEnalbed/<int:id>/<str:val>', views.changeVendorEnalbed, name='changeVendorEnalbed'),
     path('api/changeProductVisible/<int:id>/<str:val>', views.changeProductVisible, name='changeProductVisible'),
+    path('api/changeProductLimit/<int:id>/<str:val>', views.changeProductLimit, name='changeProductLimit'),
     path('<slug:category_slug>/<slug:subcategory_slug>/<slug:subsubcategory_slug>/<slug:product_slug>', views.product_admin, name='product_admin'),
     # path('api/changeOrderStatus/<int:id>/<str:val>', views.changeOrderStatus, name='changeOrderStatus'),
     # path('api/changeOrderStatus/<int:id>/<str:val>', views.changeOrderStatus, name='changeOrderStatus'),

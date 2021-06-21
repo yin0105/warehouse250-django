@@ -22,9 +22,21 @@
 
     <div class="box">
         <h2 class="is-size-3 mb-4">My products</h2>
-
-        <a href="{% url 'add_product' %}" class="button is-dark mb-6">Add product</a>
-
+        {% if vendor.products_limit > products|length %}
+            <a href="{% url 'add_product' %}" class="button is-dark mb-6">Add product</a>
+        {% else %}
+            <a href="#" onclick="return $('#alert_product_limit').removeClass('d-none');" class="button is-dark mb-6">Add product</a>
+            <div class="messages">
+                <div class="alert alert-warning alert-dismissible d-none" role="alert" id="alert_product_limit">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="$('#alert_product_limit').addClass('d-none');">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    The number of products has already reached the limit.
+                </div>
+            </div>
+        {% endif %}
+        
+        
         {% if products %}
             <table class="table is-fullwidth">
                 <thead>

@@ -42,6 +42,11 @@ def changeProductVisible(request, id, val):
     print(id, val)
     Product.objects.filter(id=id).update(visible=val)
     return HttpResponse("")   
+    
+def changeProductLimit(request, id, val):
+    print(id, val)
+    Vendor.objects.filter(id=id).update(products_limit=val)
+    return HttpResponse("") 
 
 # @login_required(login_url="/login/")
 def pages(request):
@@ -66,14 +71,12 @@ def pages(request):
         return HttpResponse(html_template.render(context, request))
         
     except template.TemplateDoesNotExist:
-
         html_template = loader.get_template( 'page-404.html' )
         return HttpResponse(html_template.render(context, request))
 
-    except:
-    
-        html_template = loader.get_template( 'page-500.html' )
-        return HttpResponse(html_template.render(context, request))
+    # except:
+    #     html_template = loader.get_template( 'page-500.html' )
+    #     return HttpResponse(html_template.render(context, request))
 
 
 def page_orders(request):
@@ -119,10 +122,13 @@ def page_orders(request):
 
 def page_vendors(request):
     context = {}
-    vendors = Product.objects.select_related("vendor").all().values("vendor__id", "vendor__company_name", "vendor__company_code", "vendor__email", "vendor__address", "vendor__phone", "vendor__enabled").annotate(products=Count("vendor__company_name")).order_by()
+    vendors = Vendor.objects.all()
+    
     vendor_list = []
     for vendor in vendors:
-        vendor_list.append({"id": vendor["vendor__id"], "name": vendor["vendor__company_name"], "code": vendor["vendor__company_code"], "email": vendor["vendor__email"], "address": vendor["vendor__address"], "phone": vendor["vendor__phone"], "enabled": vendor["vendor__enabled"], "products": vendor["products"]})
+        products = len(Product.objects.filter(vendor=vendor.id))
+        print("=== ", vendor.company_name, products)
+        vendor_list.append({"id": vendor.id, "name": vendor.company_name, "code": vendor.company_code, "email": vendor.email, "address": vendor.address, "phone": vendor.phone, "enabled": vendor.enabled, "products": products, "limit": vendor.products_limit})
     context['vendors'] = vendor_list
     
     return context
