@@ -23,7 +23,9 @@
         </div>
 
         {% for product in popular_products %}
-            {% include 'product/parts/list_item.html' %}
+            {% if product.vendor.enabled and product.visible %}
+                {% include 'product/parts/list_item.html' %}
+            {% endif %}
         {% endfor %}
     </div>
 
@@ -35,7 +37,9 @@
         </div>
 
         {% for product in featured_products %}
-            {% include 'product/parts/list_item.html' %}
+            {% if product.vendor.enabled and product.visible %}
+                {% include 'product/parts/list_item.html' %}
+            {% endif %}
         {% endfor %}
     </div>
 
@@ -51,7 +55,9 @@
 
             <div class="columns is-multiline">
                 {% for product in category.products.all %}
-                    {% include 'product/parts/list_item.html' %}
+                    {% if product.vendor.enabled and product.visible %}
+                        {% include 'product/parts/list_item.html' %}
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endfor %}
@@ -65,7 +71,9 @@
         </div>
 
         {% for product in newest_products %}
-            {% include 'product/parts/list_item.html' %}
+            {% if product.vendor.enabled and product.visible %}
+                {% include 'product/parts/list_item.html' %}
+            {% endif %}
         {% endfor %}
     </div>
 
@@ -75,7 +83,9 @@
         </div>
 
         {% for product in recently_viewed_products %}
-            {% include 'product/parts/list_item.html' %}
+            {% if product.vendor.enabled and product.visible %}
+                {% include 'product/parts/list_item.html' %}
+            {% endif %}
         {% endfor %}
     </div>
 

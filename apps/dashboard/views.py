@@ -64,6 +64,8 @@ def pages(request):
             context = page_customers(request)
         elif load_template == "product_review":
             context = page_product_review(request)
+        elif load_template == "products":
+            context = page_products(request)
         context['segment'] = load_template
 
         
@@ -148,6 +150,19 @@ def page_customers(request):
 def page_product_review(request):
     context = {}
     products = Product.objects.filter(visible=False)
+    product_list = []
+    for product in products:
+        # print(product.category_id, product.category, product.category)
+        print(product.category_id, product.category, product.category.sub_category, product.category.sub_category.category)
+        product_list.append({"id": product.id, "title": product.title, "description": product.description, "price": product.price, "date_added": product.date_added, "image": product.image, "vendor": product.vendor.company_name, "slug": product.category.sub_category.category.slug + "/" + product.category.sub_category.slug + "/" + product.category.slug + "/" + product.slug, "main_category": product.category.sub_category.category.title, "sub_category": product.category.sub_category.title, "sub_sub_category": product.category.title, "num_available": product.num_available, "visible": product.visible})
+    context['products'] = product_list
+    
+    return context
+
+
+def page_products(request):
+    context = {}
+    products = Product.objects.filter(visible=True)
     product_list = []
     for product in products:
         # print(product.category_id, product.category, product.category)
