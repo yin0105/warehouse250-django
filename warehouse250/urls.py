@@ -39,6 +39,7 @@ urlpatterns = [
     path('api/add_subscriber/', api_add_subscriber, name='api_add_subscriber'),
     path("dashboard/", include("apps.dashboard.urls")),
     path('activate/<slug:uidb64>/<slug:token>/', vendor_views.activate, name='activate'),
+    path('activate_password/<slug:uidb64>/<slug:token>/', vendor_views.activate_password, name='activate_password'),
     path('', include('apps.core.urls')),
     path('', include('apps.product.urls')),
     

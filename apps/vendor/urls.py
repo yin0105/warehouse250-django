@@ -14,6 +14,7 @@ urlpatterns = [
 
     path('myaccount/', views.myaccount, name='myaccount'),
     path('become-customer/', views.become_customer, name='become_customer'),
+    path('request_restore_password/', views.request_restore_password, name='request_restore_password'),
     path('restore_password/', views.restore_password, name='restore_password'),
 
 

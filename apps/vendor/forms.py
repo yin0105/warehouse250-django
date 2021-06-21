@@ -37,7 +37,12 @@ class VendorSignUpForm(UserCreationForm):
 # Customer Sign Up Form
 class RestorePasswordForm(forms.Form):
     email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
+
+
+class RequestRestorePasswordForm(forms.Form):
+    email = forms.EmailField()
 
 
 class CustomerSignUpForm(UserCreationForm):
