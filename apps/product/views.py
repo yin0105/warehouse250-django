@@ -31,7 +31,7 @@ def product(request, category_slug, subcategory_slug, subsubcategory_slug, produ
     cart = Cart(request)
 
     product = get_object_or_404(
-        Product, category__slug=subsubcategory_slug, slug=product_slug)
+        Product, category__slug=subsubcategory_slug, slug=product_slug, visible=True, vendor__enabled=True)
     product.num_visits = product.num_visits + 1
     product.last_visit = datetime.now()
     product.save()
