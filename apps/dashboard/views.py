@@ -66,6 +66,8 @@ def pages(request):
             context = page_product_review(request)
         elif load_template == "products":
             context = page_products(request)
+        elif load_template == "stats":
+            context = page_stats(request)
         context['segment'] = load_template
 
         
@@ -173,6 +175,32 @@ def page_products(request):
     return context
 
 
+def page_stats(request):
+    context = {}
+    today = datetime.date.today()
+    start_week = today - datetime.timedelta(today.weekday())
+    end_week = start_week + datetime.timedelta(7)
+
+    products = len(Product.objects.all())
+    vendors = len(Vendor.objects.all())
+    customers = len(Customer.objects.all())
+    
+    daily_orders = Order.objects.filter(created_at__year=today.year, created_at__month=today.month, created_at__day=today.day).aggregate(count=Count('paid_amount'), sum=Sum('paid_amount'))
+    weekly_orders = Order.objects.filter(created_at__range=[start_week, end_week]).aggregate(count=Count('paid_amount'), sum=Sum('paid_amount'))
+    monthly_orders = Order.objects.filter(created_at__year=today.year, created_at__month=today.month).aggregate(count=Count('paid_amount'), sum=Sum('paid_amount'))
+    all_orders = Order.objects.all().aggregate(count=Count('paid_amount'), sum=Sum('paid_amount'))
+
+    context["products"]  = products
+    context["vendors"]  = vendors
+    context["customers"]  = customers
+    context["daily"]  = daily_orders
+    context["weekly"]  = weekly_orders
+    context["monthly"]  = monthly_orders
+    context["all"]  = all_orders
+
+    return context
+
+
 def product_admin(request, category_slug, subcategory_slug, subsubcategory_slug, product_slug):
     cart = Cart(request)
 
@@ -187,3 +215,17 @@ def product_admin(request, category_slug, subcategory_slug, subsubcategory_slug,
         product.in_cart = False
 
     return render(request, 'product/product_admin.html', {'product': product})
+
+
+def orderDetails(request, order_id):
+    context = {}
+    order = Order.objects.filter(id=order_id).first()
+    vendors = OrderItem.objects.filter(order_id=order.id).select_related("vendor").values("vendor__company_name").annotate(count=Count("vendor")).order_by()
+    orderItems = OrderItem.objects.filter(order_id=order.id)
+
+    context["order"] = order
+    context["vendors"] = vendors
+    context["orderItems"] = orderItems
+    context['segment'] = "orders"
+    html_template = loader.get_template( 'order_detail.html' )
+    return HttpResponse(html_template.render(context, request))

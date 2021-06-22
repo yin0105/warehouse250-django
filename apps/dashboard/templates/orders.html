@@ -42,7 +42,7 @@
                         {% for order in orders %}
                           <tr>
                             <td>{{ order.id }}</td>
-                            <td>{{ order.first_name }} {{ order.last_name }}</td>
+                            <td><a href="{% url 'orderDetails' order.id %}">{{ order.first_name }} {{ order.last_name }}</a></td>
                             <td>{{ order.paid_amount }}</td>
                             <td>{{ order.status }}</td>
                             <td>{{ order.created_at }}</td>
@@ -95,13 +95,4 @@
         </div>
 
 {% endblock content %}
-
-<script>
-  $(document).ready(function () {
-    alert("ok");
-    console.log("ready");
-    $('#ordersTable').DataTable();
-    $('.dataTables_length').addClass('bs-select');
-  });
-</script>
 {% block javascripts %}{% endblock javascripts %}
