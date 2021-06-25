@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'apps.vendor',
     'apps.blog',
     'apps.dashboard',
+    'apps.coupon',
 
     'widget_tweaks',
     'crispy_forms',

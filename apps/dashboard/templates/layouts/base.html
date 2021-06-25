@@ -162,6 +162,7 @@
               null,
               null,
               null,
+              null,
               {
                   "render": function(d,t,r){
                       var $select = $("<select onchange='changeOrderStatus(" + r[0] + ", event.target.value)'></select>", {
@@ -182,7 +183,12 @@
                     }
               },
               null
-            ]
+            ],
+            order: [[1, 'asc'],],
+            columnDefs: [ {
+                targets: [ 0, ],
+                visible: false
+            } ]
         });
     $('.dataTables_length').addClass('bs-select');
 

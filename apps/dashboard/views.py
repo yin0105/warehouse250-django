@@ -85,7 +85,8 @@ def pages(request):
 
 def page_orders(request):
     context = {}
-    orders = Order.objects.all()
+    orders = Order.objects.all().order_by("-id")
+    print([i.id for i in orders])
     context['orders'] = orders
 
     

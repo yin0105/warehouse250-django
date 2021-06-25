@@ -61,11 +61,6 @@
     a.dropdown-item {
         background-color: transparent !important;   
     }
-
-    ul.navbar-nav>li>a {
-        align-items: center !important;
-        display: flex !important;
-    }
 }	
 /* ============ desktop view .end// ============ */
 
@@ -140,66 +135,69 @@
     <body>
         <nav class="navbar navbar-expand-lg is-dark is-fixed-top">
             <div class="container-fluid">
+                 <!-- <a class="navbar-brand" href="#">Brand</a>
+             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav"  aria-expanded="false" aria-label="Toggle navigation">
+                 <span class="navbar-toggler-icon"></span>
+               </button> -->
                <div class="navbar-brand">
-                    <a href="/" class="navbar-item"><strong>WAREHOUSE250</strong></a>
-            
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="main-navbar">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-                <!-- <div class="collapse navbar-collapse" id="main_nav"> -->
-                <div class="navbar-menu" id="main-navbar">
-                    <div class="navbar-start">
-                        <div class="navbar-item">
-                            <form method="get" action="{% url 'search' %}">
-                                <div class="field has-addons">
-                                    <div class="control">
-                                        <input type="text" class="input" placeholder="Search..." name="query">
-                                    </div>
-                                    <div class="control">
-                                        <button class="button is-dark">
-                                            <span class="icon"><i class="fas fa-search"></i></span>
-                                        </button>
-                                    </div>
+                <a href="/" class="navbar-item"><strong>WAREHOUSE250</strong></a>
+        
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="main-navbar">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+             <div class="collapse navbar-collapse" id="main_nav">
+                <div class="navbar-start">
+                    <div class="navbar-item">
+                        <form method="get" action="{% url 'search' %}">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input type="text" class="input" placeholder="Search..." name="query">
                                 </div>
-                            </form>
-                        </div>
+                                <div class="control">
+                                    <button class="button is-dark">
+                                        <span class="icon"><i class="fas fa-search"></i></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                </div>
                
-                
-                    <ul class="navbar-nav">
-                        {% for category in menu_categories %}
-                            {% if category.has_children %}
-                                <li class="nav-item dropdown">
-                                    <a class="dropdown-item main-item" href="{% url 'category' category.slug %}" >
-                                        {{ category.title }}  
-                                    </a>
-                                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"> </a>
-                                    
-                                    <ul class="dropdown-menu">
-                                        {% for subcategory in category.children %}
-                                            {% if subcategory.has_children %}
-                                                <li><a class="dropdown-item" href="{% url 'subcategory' category.slug subcategory.slug %}"> {{ subcategory.title }}  &raquo; </a>
-                                                    <ul class="submenu dropdown-menu">
-                                                        {% for subsubcategory in subcategory.children %}
-                                                            <li><a class="dropdown-item" href="{% url 'subsubcategory' category.slug subcategory.slug subsubcategory.slug %}"> {{ subsubcategory.title }} </a></li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </li>
-                                            {% else %}
-                                                <li><a class="dropdown-item" href="{% url 'subcategory' category.slug subcategory.slug %}"> {{ subcategory.title }} </a></li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                
-                                </li>
-                            {% else %}
-                                <li class="nav-item"><a class="nav-link" href="{% url 'category' category.slug %}"> {{ category.title }} </a></li>
-                            {% endif %}
-                        {% endfor %}                   
-                    </ul>
+           
+               <ul class="navbar-nav">
+                {% for category in menu_categories %}
+                    {% if category.has_children %}
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-item main-item" href="{% url 'category' category.slug %}" >
+                                {{ category.title }}  
+                            </a>
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"> </a>
+                            
+                            <ul class="dropdown-menu">
+                                {% for subcategory in category.children %}
+                                    {% if subcategory.has_children %}
+                                        <li><a class="dropdown-item" href="{% url 'subcategory' category.slug subcategory.slug %}"> {{ subcategory.title }}  &raquo; </a>
+                                            <ul class="submenu dropdown-menu">
+                                                {% for subsubcategory in subcategory.children %}
+                                                    <li><a class="dropdown-item" href="{% url 'subsubcategory' category.slug subcategory.slug subsubcategory.slug %}"> {{ subsubcategory.title }} </a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% else %}
+                                        <li><a class="dropdown-item" href="{% url 'subcategory' category.slug subcategory.slug %}"> {{ subcategory.title }} </a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'category' category.slug %}"> {{ category.title }} </a></li>
+                    {% endif %}
+                {% endfor %}                   
+               </ul>
            
                <!-- <ul class="navbar-nav ms-auto">
                    <li class="nav-item"><a class="nav-link" href="#"> Menu item </a></li>

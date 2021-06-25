@@ -36,6 +36,7 @@ class Order(models.Model):
     shipped_date = models.DateTimeField(blank=True, null=True)
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default=ORDERED)
+    used_coupon = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         ordering = ['-created_at']
