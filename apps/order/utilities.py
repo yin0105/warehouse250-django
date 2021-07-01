@@ -5,12 +5,23 @@ from django.template.loader import render_to_string
 from apps.cart.cart import Cart
 
 from .models import Order, OrderItem
+from apps.coupon.models import Coupon
 
 
-def checkout(request, first_name, last_name, email, address, phone, district, sector, cell, village, delivery_address, delivery_cost, amount):
+def checkout(request, first_name, last_name, email, address, phone, district, sector, cell, village, delivery_address, delivery_cost, cart_cost, coupon_code):
+    print(" === coupon code = ", coupon_code)
+    coupon_discount = 0
+    if coupon_code != "":
+        try:            
+            coupon = Coupon.objects.get(code=coupon_code)
+            if coupon.can_use():
+                coupon.use()
+                coupon_discount = coupon.discount
+        except:
+            pass
 
     try:
-        order = Order.objects.create(first_name=first_name, last_name=last_name, email=email, address=address, phone=phone, district=district, sector=sector, cell=cell, village=village, delivery_address=delivery_address, delivery_cost=delivery_cost, paid_amount=amount)
+        order = Order.objects.create(first_name=first_name, last_name=last_name, email=email, address=address, phone=phone, district=district, sector=sector, cell=cell, village=village, delivery_address=delivery_address, delivery_cost=delivery_cost, paid_amount=delivery_cost + cart_cost * (100 - coupon_discount) / 100, used_coupon=coupon_code)
     except Exception as e:
         raise e
     total_quantity = 0

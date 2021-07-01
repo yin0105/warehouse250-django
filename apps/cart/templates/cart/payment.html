@@ -44,6 +44,19 @@
                 </tr>
                 <tr>
                     <td></td>
+                    <td><strong>Code</strong></td>                                
+                    <td><strong>{{ coupon.code }}</strong></td>
+                    <td><strong>{{ coupon.discount }} %</strong></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td><strong>Subtotal cost with coupon</strong></td>
+                    <td><strong></strong></td>
+                    <td><strong>Frw <span id="total_cost_with_coupon" name="total_cost_with_coupon">{{ 100|sub:coupon.discount|mul:cart.get_cart_cost|div:100 }}</span></strong></td>
+                </tr>
+                <tr>
+                    <td></td>
                     <td><strong>Delivery cost</strong></td>
                     <td></td>
                     <td><strong>Frw {{ cart.get_delivery_cost }}</strong></td>
@@ -52,7 +65,7 @@
                     <td></td>
                     <td><strong>Total cost</strong></td>
                     <td><strong>{{ cart|length }}</strong></td>
-                    <td><strong>Frw {{ cart.get_total_cost }}</strong></td>
+                    <td><strong>Frw {{ 100|sub:coupon.discount|mul:cart.get_cart_cost|div:100|add:cart.get_delivery_cost }}</strong></td>
                 </tr>
                 <tr>
                     <td></td>

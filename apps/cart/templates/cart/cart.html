@@ -31,8 +31,14 @@
             console.log($elem_total_row.children().eq(3).text());
 
             $elem_total_row.children().eq(2).text(parseFloat($elem_total_row.children().eq(2).text()) + delta);
-            $elem_total_row.children().eq(3).text($elem_total_prefix + " " + $elem_total);
             
+            $("#total_cost").text($elem_total);
+            if ($("#coupon_value").text() == "") {
+                $("#total_cost_with_coupon").text($elem_total);
+            } else {
+                var coupon_discount = parseInt($("#coupon_value").text().split(" ")[0])
+                $("#total_cost_with_coupon").text(parseFloat($elem_total) * (100 - coupon_discount) / 100);
+            }
             $quantity_dict[item_id] = $quantity;
         }
 
@@ -50,8 +56,24 @@
             });
 
             document.myform.id_quantity.value = $id_quantity
-            console.log(document.myform.id_quantity.value);
             document.myform.submit();
+        }
+
+        function applyCoupon() {
+            console.log($("#coupon_code").val());
+            $.ajax({
+                type: "GET",
+                url: "/api/can_use/?coupon_code=" + $("#coupon_code").val(),
+                success: function (data) {
+                    console.log(data);
+                    var discount = parseInt(data.amount);
+                    if (discount > 0) {
+                        $("#coupon_value").text(discount + " %");
+                        $("#total_cost_with_coupon").text(parseFloat($("#total_cost").text()) * (100 - discount) / 100);
+                        document.myform.coupon_discount.value = discount
+                    }
+                },
+            });
         }
     </script>
     <h1 class="title">Cart</h1>
@@ -60,7 +82,8 @@
         <div class="box mb-6">
             <form method="post" action="." name="myform">
                 {% csrf_token %} 
-                <input type="hidden" name="id_quantity" id="id_quantity" value="aa_1"/>
+                <input type="hidden" name="id_quantity" id="id_quantity"/>
+                <input type="hidden" name="coupon_discount" id="coupon_discount"/>
                 <div class="table">
                     <table class="table is-fullwidth is-striped">
                         <thead>
@@ -95,7 +118,7 @@
 
                                     </td>
                                     <td>Frw {{ item.total_price }}</td>
-                                    <td><a href="?remove_from_cart={{ item.id }}" class="delete">Remove</a></td>
+                                    <td class="text-center"><a href="?remove_from_cart={{ item.id }}" class="delete">Remove</a></td>
                                 </tr>
                                 {% endif %}
                             {% endfor %}
@@ -106,8 +129,24 @@
                                 <td></td>
                                 <td><strong>Total cost</strong></td>
                                 <td><strong>{{ cart|length }}</strong></td>
-                                <td><strong>Frw {{ cart.get_cart_cost }}</strong></td>
-                                <td><input type="button" class="button is-success" value="Order" onclick="handleClick()" /></td>
+                                <td><strong>Frw <span id="total_cost">{{ cart.get_cart_cost }}</span></strong></td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td><strong>Code</strong></td>                                
+                                <td><input type="text" id="coupon_code" name="coupon_code"/></td>
+                                <td id="coupon_value" name="coupon_value"></td>                                  
+                                <td class="text-center"><input type="button" class="button is-success" value="Apply Coupon" onclick="applyCoupon()" /></td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td><strong>Total cost with coupon</strong></td>
+                                <td><strong></strong></td>
+                                <td><strong>Frw <span id="total_cost_with_coupon" name="total_cost_with_coupon">{{ cart.get_cart_cost }}</span></strong></td>
+                                <td class="text-center"><input type="button" class="button is-success" value="Order" onclick="handleClick()" /></td>
                             </tr>
                         </tfoot>
                     </table>

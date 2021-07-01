@@ -1,3 +1,4 @@
+from apps.coupon.models import Coupon
 import stripe
 
 from django.conf import settings
@@ -24,11 +25,26 @@ def cart_detail(request):
         if request.user.is_authenticated:
             # messages.success(request, 'Thank you for your order')
             if "id_quantity" in request.POST:
+                print("coupon code = ", request.POST["coupon_code"])
+                print("coupon value = ", request.POST["coupon_discount"])
+                coupon_code = request.POST["coupon_code"]
+                coupon_discount = request.POST["coupon_discount"]
+                if coupon_discount == "": coupon_code = ""
+
+                coupon = request.session.get(settings.COUPON_SESSION_ID)
+                if not coupon:
+                    coupon = request.session[settings.COUPON_SESSION_ID] = {}
+                coupon["code"] = coupon_code
+                coupon["discount"] = coupon_discount
+                request.session[settings.COUPON_SESSION_ID] = coupon
+
                 for elem in request.POST["id_quantity"].split(":"):
                     elem_id = elem.split("_")[0]
                     elem_quantity = elem.split("_")[1]
                     cart.set(elem_id, elem_quantity)
-            return redirect('contact_info')
+
+                print("== redirect")
+                return redirect('contact_info')
         else:
             messages.success(request, 'Please sign in')
             return redirect('login')
@@ -50,6 +66,9 @@ def cart_detail(request):
 
 def contact_info(request):
     cart = Cart(request)
+    print("contact_info")
+    print("GET = ", request.GET)
+    print("POST = ", request.POST)
 
     districts = District.objects.all()
     delivery_costs = DeliveryCost.objects.all()
@@ -64,7 +83,9 @@ def contact_info(request):
     #     cart_user = cart_customer
 
     if cart_customer:
+        print("cart_customer")
         if request.method == 'POST':
+            print("POST")
             form = CheckoutForm(request.POST)
 
             if form.is_valid():
@@ -109,7 +130,7 @@ def contact_info(request):
 
     else:
         return redirect('cart')
-    return render(request, 'cart/contact.html', {'form': form, 'cart_user': cart_customer, 'districts': districts, 'delivery_costs': delivery_costs, 'pickup_available': pickup_avaliable})
+    return render(request, 'cart/contact.html', {'form': form, 'cart_user': cart_customer, 'districts': districts, 'delivery_costs': delivery_costs, 'pickup_available': pickup_avaliable, 'coupon': request.session.get(settings.COUPON_SESSION_ID)})
 
 
 def district_sector(request):
@@ -148,8 +169,13 @@ def payment_check(request):
             stripe_token = form.cleaned_data['stripe_token']
 
             try:
+                amount = cart.get_cart_cost()
+                if request.session.get(settings.COUPON_SESSION_ID)["discount"] != "":
+                    amount = amount * (100 - int(request.session.get(settings.COUPON_SESSION_ID)["discount"])) / 100
+                amount += cart.get_delivery_cost()
+
                 charge = stripe.Charge.create(
-                    amount=int(cart.get_total_cost() * 100),
+                    amount=int(amount * 100),
                     currency='USD',
                     description='Charge from Warehouse250',
                     source=stripe_token
@@ -170,8 +196,7 @@ def payment_check(request):
                 delivery_address = cart.cart['delivery']['address']
                 delivery_cost = cart.cart['delivery']['cost']
                 order = checkout(request, first_name, last_name, email, address, phone, district,
-                                    sector, cell, village, delivery_address, delivery_cost, cart.get_total_cost())
-
+                                    sector, cell, village, delivery_address, delivery_cost, cart.get_cart_cost(), request.session.get(settings.COUPON_SESSION_ID)["code"])
                 cart.clear()
 
                 notify_customer(order)
@@ -184,7 +209,7 @@ def payment_check(request):
     else:
         form = PaymentForm()
 
-    return render(request, 'cart/payment.html', {'form': form, 'stripe_pub_key': settings.STRIPE_PUB_KEY})
+    return render(request, 'cart/payment.html', {'form': form, 'stripe_pub_key': settings.STRIPE_PUB_KEY, 'coupon': request.session.get(settings.COUPON_SESSION_ID)})
 
 
 def success(request):

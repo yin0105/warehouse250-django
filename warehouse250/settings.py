@@ -36,6 +36,7 @@ LOGOUT_REDIRECT_URL = 'frontpage'
 
 SESSION_COOKIE_AGE = 86400
 CART_SESSION_ID = 'cart'
+COUPON_SESSION_ID = 'coupon'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

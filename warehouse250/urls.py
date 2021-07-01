@@ -20,10 +20,12 @@ from django.urls import path, include
 from django.conf.urls.static import static
 
 from apps.newsletter.api import api_add_subscriber
+from apps.coupon.api import api_can_use
 
 from django.contrib.sitemaps.views import sitemap
 
 from .sitemaps import StaticViewSitemap, CategorySitemap, ProductSitemap, PostSitemap
+
 
 from apps.vendor import views as vendor_views
 
@@ -37,6 +39,7 @@ urlpatterns = [
     path('cart/', include('apps.cart.urls')),
     path('blog/', include('apps.blog.urls')),
     path('api/add_subscriber/', api_add_subscriber, name='api_add_subscriber'),
+    path('api/can_use/', api_can_use, name='api_can_use'),
     path("dashboard/", include("apps.dashboard.urls")),
     path('activate/<slug:uidb64>/<slug:token>/', vendor_views.activate, name='activate'),
     path('activate_password/<slug:uidb64>/<slug:token>/', vendor_views.activate_password, name='activate_password'),

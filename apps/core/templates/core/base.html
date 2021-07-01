@@ -172,11 +172,11 @@
                     <ul class="navbar-nav">
                         {% for category in menu_categories %}
                             {% if category.has_children %}
-                                <li class="nav-item dropdown">
-                                    <a class="dropdown-item main-item" href="{% url 'category' category.slug %}" >
+                                <li class="nav-item dropdown flex-wrap flex-md-nowrap">
+                                    <a class="dropdown-item main-item w-75" href="{% url 'category' category.slug %}" >
                                         {{ category.title }}  
                                     </a>
-                                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"> </a>
+                                    <a class="nav-link dropdown-toggle w-25" href="#" data-bs-toggle="dropdown"> </a>
                                     
                                     <ul class="dropdown-menu">
                                         {% for subcategory in category.children %}
