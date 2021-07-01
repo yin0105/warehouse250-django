@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
+from decimal import Decimal
 
 from apps.cart.cart import Cart
 
@@ -21,7 +22,10 @@ def checkout(request, first_name, last_name, email, address, phone, district, se
             pass
 
     try:
-        order = Order.objects.create(first_name=first_name, last_name=last_name, email=email, address=address, phone=phone, district=district, sector=sector, cell=cell, village=village, delivery_address=delivery_address, delivery_cost=delivery_cost, paid_amount=delivery_cost + cart_cost * (100 - coupon_discount) / 100, used_coupon=coupon_code)
+        print("before calc: ", type(delivery_cost), type(cart_cost), type(coupon_discount))
+        paid_amount = Decimal(delivery_cost) + cart_cost * (100 - coupon_discount) / 100
+        print("paid amount = ", paid_amount)
+        order = Order.objects.create(first_name=first_name, last_name=last_name, email=email, address=address, phone=phone, district=district, sector=sector, cell=cell, village=village, delivery_address=delivery_address, delivery_cost=delivery_cost, paid_amount=paid_amount, used_coupon=coupon_code)
     except Exception as e:
         raise e
     total_quantity = 0
@@ -33,6 +37,7 @@ def checkout(request, first_name, last_name, email, address, phone, district, se
             order=order, product=item['product'], vendor=item['product'].vendor, price=item['product'].price, quantity=item['quantity'])
 
         order.vendors.add(item['product'].vendor)
+    order.coupon_discount = coupon_discount
     order.total_quantity = total_quantity
     order.subtotal_amount = subtotal_amount
 

@@ -1,3 +1,4 @@
+from apps.coupon.models import Coupon
 from django.shortcuts import render, redirect,  get_object_or_404, HttpResponseRedirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -77,6 +78,14 @@ def login_request(request):
                         order["total_quantity"] = str(total_quantity)
                         order["paid_amount"] = str(row.paid_amount)
                         order["delivery_cost"] = str(row.delivery_cost)
+                        coupon_discount = ""
+                        coupon_code = str(row.used_coupon)
+                        if coupon_code != "None":
+                            coupon = Coupon.objects.get(code=coupon_code)
+                            
+                            if coupon:
+                                coupon_discount = str(coupon.discount) + " %"
+                        order["coupon_discount"] = coupon_discount
                         orders.append(order)
                     
                     request.session['orders'] = orders

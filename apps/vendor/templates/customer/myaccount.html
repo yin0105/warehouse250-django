@@ -48,6 +48,15 @@
                             <td>{{ order.total_quantity }}</td>
                             <td>{{ order.subtotal_amount }}</td>
                         </tr>
+                        
+                        {% if order.coupon_discount != "" %}
+                            <tr>
+                                <td>Coupon</td>
+                                <td> </td>
+                                <td>{{ order.coupon_discount }}</td>
+                            </tr>
+                        {% endif %}
+                        
                         <tr>
                             <td>Delivery cost</td>
                             <td> </td>

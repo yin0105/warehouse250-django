@@ -81,6 +81,10 @@ class Cart(object):
         self.session.modified = True
 
     def get_delivery_cost(self):
+        if "delivery" in self.cart:
+            print(" delivery - 1")
+            if self.cart['delivery']['cost']:
+                print(" delivery - 2 *", self.cart['delivery']['cost'], "#")
         if "delivery" in self.cart and self.cart['delivery']['cost']:
             return self.cart['delivery']['cost']
         return 0
