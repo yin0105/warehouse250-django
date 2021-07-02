@@ -32,9 +32,9 @@ def checkout(request, first_name, last_name, email, address, phone, district, se
     subtotal_amount = 0
     for item in Cart(request):
         total_quantity += item['quantity']
-        subtotal_amount += item['product'].price * item['quantity']
+        subtotal_amount += item['product'].get_discounted_price() * item['quantity']
         OrderItem.objects.create(
-            order=order, product=item['product'], vendor=item['product'].vendor, price=item['product'].price, quantity=item['quantity'])
+            order=order, product=item['product'], vendor=item['product'].vendor, price=item['product'].get_discounted_price(), quantity=item['quantity'])
 
         order.vendors.add(item['product'].vendor)
     order.coupon_discount = coupon_discount

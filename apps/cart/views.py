@@ -171,13 +171,10 @@ def payment_check(request):
             stripe_token = form.cleaned_data['stripe_token']
 
             try:
-                print("try")
                 amount = cart.get_cart_cost()
                 if request.session.get(settings.COUPON_SESSION_ID)["discount"] != "":
                     amount = amount * (100 - int(request.session.get(settings.COUPON_SESSION_ID)["discount"])) / 100
-                print("0: #", cart.get_delivery_cost(), "# : ", type(cart.get_delivery_cost()),  type(float(cart.get_delivery_cost())), type(amount))
                 amount += Decimal(cart.get_delivery_cost())
-                print("1")
 
                 charge = stripe.Charge.create(
                     amount=int(amount * 100),
@@ -185,32 +182,27 @@ def payment_check(request):
                     description='Charge from Warehouse250',
                     source=stripe_token
                 )
-                print("2")
 
                 first_name = request.user.customer.customername.split(' ')[0]
                 if len(request.user.customer.customername.split(' ')) > 1:
                     last_name = request.user.customer.customername.split(' ')[1]
                 else:
                     last_name = ""
-                print("3")
                 email = request.user.customer.email
                 phone = request.user.customer.phone
                 address = request.user.customer.address
-                print("befor delivery")
                 district = cart.cart['delivery']['district']
-                print("4")
                 sector = cart.cart['delivery']['sector']
                 cell = cart.cart['delivery']['cell']
                 village = cart.cart['delivery']['village']
                 delivery_address = cart.cart['delivery']['address']
                 delivery_cost = cart.cart['delivery']['cost']
-                print("before order")
                 order = checkout(request, first_name, last_name, email, address, phone, district,
                                     sector, cell, village, delivery_address, delivery_cost, cart.get_cart_cost(), request.session.get(settings.COUPON_SESSION_ID)["code"])
                 cart.clear()
 
-                notify_customer(order)
-                notify_vendor(order)
+                # notify_customer(order)
+                # notify_vendor(order)
 
                 return redirect('success')
             except Exception:

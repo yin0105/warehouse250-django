@@ -81,10 +81,12 @@ def login_request(request):
                         coupon_discount = ""
                         coupon_code = str(row.used_coupon)
                         if coupon_code != "None":
-                            coupon = Coupon.objects.get(code=coupon_code)
-                            
-                            if coupon:
-                                coupon_discount = str(coupon.discount) + " %"
+                            try:
+                                coupon = Coupon.objects.get(code=coupon_code)
+                                if coupon:
+                                    coupon_discount = str(coupon.discount) + " %"
+                            except:
+                                pass
                         order["coupon_discount"] = coupon_discount
                         orders.append(order)
                     

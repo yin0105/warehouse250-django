@@ -56,7 +56,7 @@
                             {% if item.vendor == vendor %}
                                 <tr>
                                     <td>{{ item.product.title }}</td>
-                                    <td>Frw {{ item.product.price }}</td>
+                                    <td>Frw {{ item.product.get_discounted_price }}</td>
                                     <td>{{ item.quantity }}</td>
                                     <td>Frw {{ item.get_total_price }}</td>
                                 </tr>

@@ -49,14 +49,25 @@
                         <td></td>
                         <td><strong>Code</strong></td>                                
                         <td><strong>{{ coupon.code }}</strong></td>
-                        <td><strong>{{ coupon.discount }} %</strong></td>
+                        <td><strong>
+                            {% if coupon.discount != "" %}
+                                {{ coupon.discount }} %
+                            {% endif %}
+                        </strong></td>
                     </tr>
 
                     <tr>
                         <td></td>
                         <td><strong>Total cost with coupon</strong></td>
                         <td><strong></strong></td>
-                        <td><strong>Frw <span id="total_cost_with_coupon" name="total_cost_with_coupon">{{ 100|sub:coupon.discount|mul:cart.get_cart_cost|div:100 }}</span></strong></td>
+                        <td><strong>
+                            Frw <span id="total_cost_with_coupon" name="total_cost_with_coupon">
+                            {% if coupon.discount != "" %}
+                                {{ 100|sub:coupon.discount|mul:cart.get_cart_cost|div:100 }}</span>
+                            {% else %}
+                                {{ cart.get_cart_cost }}
+                            {% endif %}
+                        </strong></td>
                     </tr>
                 </tfoot>
             </table>
