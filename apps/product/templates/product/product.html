@@ -7,16 +7,104 @@
 {% block content %}
 
     <div class="columns">
+        <!-- Thumbnails -->
+        <div class="column is-1"> 
+            <!--  carousel-indicators -->
+            <button
+            type="button"
+            data-mdb-target="#carouselExampleIndicators"
+            data-mdb-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+            style="width: 100px;"
+            >
+            <img
+                class="d-block w-100"
+                src="{{ product.image.url }}"
+                class="img-fluid"
+            />
+            </button>
+            {% for img in imgs %}
+                <button
+                type="button"
+                data-mdb-target="#carouselExampleIndicators"
+                data-mdb-slide-to="{{ forloop.counter }}"
+                aria-label="Slide 2"
+                style="width: 100px;"
+                >
+                <img
+                    class="d-block w-100"
+                    src="{{ img.thumbnail.url }}"
+                    class="img-fluid"
+                />
+                </button>
+            {% endfor %}
+        </div>
         <div class="column is-6">
             {% if product.image %}
-                <figure class="image is-4by3 mb-6">
+                <!-- <figure class="image is-4by3 mb-6">
                     <img src="{{ product.image.url }}">
-                </figure>
+                </figure> -->
+
+                <div
+                    id="carouselExampleIndicators"
+                    class="carousel slide carousel-fade"
+                    data-mdb-ride="carousel"
+                >
+                <!-- Slides -->
+                    <div class="carousel-inner mb-5">
+                        <div class="carousel-item active">
+                            <figure class="image is-4by3 mb-6">
+                                <img src="{{ product.image.url }}">
+                            </figure>
+                        </div>
+                        {% for img in imgs %}
+                            <div class="carousel-item">
+                                <figure class="image is-4by3 mb-6">
+                                    <img src="{{ img.image.url }}">
+                                </figure>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Slides -->
+
+                    <!-- Controls -->
+                    <button
+                        class="carousel-control-prev"
+                        type="button"
+                        data-mdb-target="#carouselExampleIndicators"
+                        data-mdb-slide="prev"
+                    >
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button
+                        class="carousel-control-next"
+                        type="button"
+                        data-mdb-target="#carouselExampleIndicators"
+                        data-mdb-slide="next"
+                    >
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    <!-- Controls -->
+
+                    
+                <!-- Thumbnails -->
+                </div>
+                
             {% endif %}
         </div>
 
-        <div class="column is-6">
-            <h1 class="title">{{ product.title }}, Frw {{ product.price }}</h1>
+        <div class="column is-5">
+            <h1 class="title">{{ product.title }}, 
+                {% if product.discount > 0 %}
+                    <span class="text-decoration-line-through">Frw {{ product.price }}</span> <span style="color: #E00D0D">Frw {{ product.get_discounted_price }}</span>
+                {% else %}
+                    Frw {{ product.price }}
+                {% endif %}
+            </h1>
 
             <p class="mb-6"><span class="tag is-dark">{{ product.vendor.company_name }}</span></p>
 
@@ -56,18 +144,18 @@
     </div>
 
 
-            {% if similar_products %}
-                <hr>
+    {% if similar_products %}
+        <hr>
 
-                <div class="columns is-multiline">
-                    <div class="column is-12">
-                        <h2 class="subtitle">Similar products</h2>
-                    </div>
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <h2 class="subtitle">Similar products</h2>
+            </div>
 
-                    {% for product in similar_products %}
-                        {% include 'product/parts/list_item.html' %}
-                    {% endfor %}
-                </div>
-            {% endif %}
+            {% for product in similar_products %}
+                {% include 'product/parts/list_item.html' %}
+            {% endfor %}
+        </div>
+    {% endif %}
     
 {% endblock %}

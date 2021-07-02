@@ -163,8 +163,9 @@ def payment_check(request):
     cart = Cart(request)
     if request.method == 'POST':
         form = PaymentForm(request.POST)  # PaymentForm
-
+        print("POST")
         if form.is_valid():
+            print("valid")
             stripe.api_key = settings.STRIPE_SECRET_KEY
 
             stripe_token = form.cleaned_data['stripe_token']
@@ -215,6 +216,8 @@ def payment_check(request):
             except Exception:
                 messages.error(
                     request, 'There was something wrong with the payment')
+        else:
+            print("invalid")
     else:
         form = PaymentForm()
 

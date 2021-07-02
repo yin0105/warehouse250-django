@@ -246,6 +246,14 @@ def vendor_admin(request):
             order.vendor_amount = 0
             order.vendor_paid_amount = 0
             order.fully_paid = True
+            coupon_discount = 0
+            coupon_code = str(order.used_coupon)
+            if coupon_code != "None":
+                coupon = Coupon.objects.get(code=coupon_code)
+                
+                if coupon:
+                    coupon_discount = coupon.discount
+            order.coupon_discount = coupon_discount
 
             for item in order.items.all():
                 if item.vendor == request.user.vendor:

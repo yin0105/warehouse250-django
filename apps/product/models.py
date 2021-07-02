@@ -5,6 +5,8 @@ from django.core.files import File
 from django.db import models
 
 from apps.vendor.models import Vendor
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 
 class Category(models.Model):
@@ -79,6 +81,7 @@ class Product(models.Model):
     last_visit = models.DateTimeField(blank=True, null=True)
     pickup_available = models.BooleanField(default=False)
     visible = models.BooleanField(default=False)
+    discount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
 
     class Meta:
         ordering = ['-date_added']
@@ -113,6 +116,8 @@ class Product(models.Model):
 
         return thumbnail
 
+    def get_discounted_price(self):
+        return self.price * (100 - self.discount) / 100
 
 class ProductImage(models.Model):
     product = models.ForeignKey(

@@ -9,7 +9,14 @@
 
         <h2 class="subtitle">{{ product.title }}</h2>
 
-        <h3 class="price is-size-6 mb-5">Frw {{ product.price }}</h3>
+        
+        <h3 class="price is-size-6 mb-5">
+            {% if product.discount > 0 %}
+                <span class="text-decoration-line-through">Frw {{ product.price }}</span> <span style="color: #E00D0D">Frw {{ product.get_discounted_price }}</span>
+            {% else %}
+                Frw {{ product.price }}
+            {% endif %}
+        </h3>
 
         <form method="post" action=".">
             {% csrf_token %}

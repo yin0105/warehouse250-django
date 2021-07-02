@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import AddToCartForm, AddToCartInListForm
-from .models import Category, SubCategory, SubSubCategory, Product
+from .models import Category, ProductImage, SubCategory, SubSubCategory, Product
 
 from apps.cart.cart import Cart
 
@@ -62,8 +62,9 @@ def product(request, category_slug, subcategory_slug, subsubcategory_slug, produ
         product.in_cart = True
     else:
         product.in_cart = False
+    product_imgs = ProductImage.objects.filter(product=product)
 
-    return render(request, 'product/product.html', {'form': form, 'product': product, 'similar_products': similar_products})
+    return render(request, 'product/product.html', {'form': form, 'product': product, 'imgs': product_imgs, 'similar_products': similar_products})
 
 
 def category(request, category_slug):

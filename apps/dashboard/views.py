@@ -18,6 +18,7 @@ from apps.vendor.models import Vendor, Customer
 from apps.product.models import Product
 
 from apps.cart.cart import Cart
+from apps.product.models import ProductImage
 
 # @login_required(login_url="/login/")
 def index(request):
@@ -213,8 +214,9 @@ def product_admin(request, category_slug, subcategory_slug, subsubcategory_slug,
         product.in_cart = True
     else:
         product.in_cart = False
+    product_imgs = ProductImage.objects.filter(product=product)
 
-    return render(request, 'product/product_admin.html', {'product': product})
+    return render(request, 'product/product_admin.html', {'product': product, 'imgs': product_imgs})
 
 
 def orderDetails(request, order_id):

@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load mathfilters %}
 
 {% block title %}Vendor Dashboard | {{ vendor.company_name }} - {% endblock %}
 
@@ -43,6 +44,7 @@
                     <tr>
                         <th>Title</th>
                         <th>Price</th>
+                        <th>Discount</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -52,6 +54,11 @@
                         <tr>
                             <td><a href="{% url 'product' product.category.sub_category.category.slug product.category.sub_category.slug product.category.slug product.slug %}">{{ product.title }}</a></td>
                             <td>Frw {{ product.price }}</td>
+                            <td>
+                                {% if product.discount > 0 %}
+                                    {{ product.discount }} %
+                                {% endif %}
+                            </td>
                             <td><a href="{% url 'edit_product' product.id %}">Edit</a></td>
                         </tr>
                     {% endfor %}
@@ -86,6 +93,7 @@
                                         <th>Title</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
+                                        <th>Coupon Discount</th>
                                         <th>Paid</th>
                                         <th>Total</th>
                                     </tr>
@@ -98,8 +106,13 @@
                                                 <td>{{ item.product.title }}</td>
                                                 <td>Frw {{ item.product.price }}</td>
                                                 <td>{{ item.quantity }}</td>
+                                                <td>
+                                                    {% if order.coupon_discount > 0 %}
+                                                        {{ order.coupon_discount }} %
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
-                                                <td>Frw {{ item.get_total_price }}</td>
+                                                <td>Frw {{ 100|sub:order.coupon_discount|mul:item.get_total_price|div:100 }}</td>
                                             </tr>
                                         {% endif %}
                                     {% endfor %}

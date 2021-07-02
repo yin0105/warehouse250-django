@@ -7,11 +7,12 @@ from django.contrib.auth.models import User
 from apps.product.models import Product
 from .models import Vendor, Customer
 
+
 class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = ['category', 'image', 'title',
-                  'description', 'price', 'num_available', 'pickup_available']
+                  'description', 'price', 'discount', 'num_available', 'pickup_available']
 
 
 # Vendor Sign Up Form

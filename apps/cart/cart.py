@@ -20,7 +20,7 @@ class Cart(object):
 
         for item in self.cart.values():
             if 'product' in item:
-                item['total_price'] = item['product'].price * item['quantity']
+                item['total_price'] = item['product'].get_discounted_price() * item['quantity']
 
                 yield item
 
@@ -101,7 +101,7 @@ class Cart(object):
         total_cost = 0
         for item in self.cart.values():
             if 'product' in item:
-                total_cost += item['product'].price * item['quantity']
+                total_cost += item['product'].get_discounted_price() * item['quantity']
         return total_cost
 
     def get_total_cost(self):
@@ -112,7 +112,7 @@ class Cart(object):
         total_cost = 0
         for item in self.cart.values():
             if 'product' in item:
-                total_cost += item['product'].price * item['quantity']
+                total_cost += item['product'].get_discounted_price() * item['quantity']
         
         if "delivery" in self.cart and self.cart['delivery']['cost']:
             total_cost += int(self.cart['delivery']['cost'])
