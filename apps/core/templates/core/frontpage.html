@@ -54,10 +54,14 @@
             </div>
 
             <div class="columns is-multiline">
-                {% for product in category.products.all %}
-                    {% if product.vendor.enabled and product.visible %}
-                        {% include 'product/parts/list_item.html' %}
-                    {% endif %}
+                {% for subcategory in category.subcategory.all %}
+                    {% for subsubcategory in subcategory.subsubcategory.all %}
+                        {% for product in subsubcategory.products.all %}
+                            {% if product.vendor.enabled and product.visible %}
+                                {% include 'product/parts/list_item.html' %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
                 {% endfor %}
             </div>
         {% endfor %}
