@@ -9,6 +9,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 
+
+
 class Category(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
@@ -82,6 +84,7 @@ class Product(models.Model):
     pickup_available = models.BooleanField(default=False)
     visible = models.BooleanField(default=False)
     discount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
+    # image_2 = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-date_added']

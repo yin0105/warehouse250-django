@@ -54,14 +54,8 @@
             </div>
 
             <div class="columns is-multiline">
-                {% for subcategory in category.subcategory.all %}
-                    {% for subsubcategory in subcategory.subsubcategory.all %}
-                        {% for product in subsubcategory.products.all %}
-                            {% if product.vendor.enabled and product.visible %}
-                                {% include 'product/parts/list_item.html' %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
+                {% for product in featured_categories_products %}
+                    {% include 'product/parts/list_item.html' %}
                 {% endfor %}
             </div>
         {% endfor %}
