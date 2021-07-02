@@ -82,9 +82,9 @@ class Product(models.Model):
     num_visits = models.IntegerField(default=0)
     last_visit = models.DateTimeField(blank=True, null=True)
     pickup_available = models.BooleanField(default=False)
-    visible = models.BooleanField(default=False)
+    visible = models.BooleanField(default=False) 
     discount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
-    # image_2 = models.ForeignKey(ProductImage, on_delete=models.CASCADE)
+    # image_2 = models.ForeignKey('ProductImage', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-date_added']

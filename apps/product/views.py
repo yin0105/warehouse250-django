@@ -19,10 +19,16 @@ def search(request):
     price_to = request.GET.get('price_to', 5000000)
     sorting = request.GET.get('sorting', '-date_added')
     products = Product.objects.filter(Q(title__icontains=query) | Q(
-        description__icontains=query)).filter(price__gte=price_from).filter(price__lte=price_to)
+        description__icontains=query))
+        # .filter(price__gte=price_from).filter(price__lte=price_to)
 
     if instock:
         products = products.filter(num_available__gte=1)
+    products_id = []
+    for product in products:
+        if product.get_discounted_price() >= float(price_from) and product.get_discounted_price() <= float(price_to):
+            products_id.append(product.id)
+    products = Product.objects.filter(Q(id__in=products_id)) 
 
     return render(request, 'product/search.html', {'products': products.order_by(sorting), 'query': query, 'instock': instock, 'price_from': price_from, 'price_to': price_to, 'sorting': sorting})
 
