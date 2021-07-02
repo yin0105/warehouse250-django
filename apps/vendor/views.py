@@ -251,10 +251,13 @@ def vendor_admin(request):
             coupon_discount = 0
             coupon_code = str(order.used_coupon)
             if coupon_code != "None":
-                coupon = Coupon.objects.get(code=coupon_code)
-                
-                if coupon:
-                    coupon_discount = coupon.discount
+                try:
+                    coupon = Coupon.objects.get(code=coupon_code)
+                    
+                    if coupon:
+                        coupon_discount = coupon.discount
+                except:
+                    pass
             order.coupon_discount = coupon_discount
 
             for item in order.items.all():
