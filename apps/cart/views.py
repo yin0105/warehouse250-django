@@ -201,8 +201,8 @@ def payment_check(request):
                                     sector, cell, village, delivery_address, delivery_cost, cart.get_cart_cost(), request.session.get(settings.COUPON_SESSION_ID)["code"])
                 cart.clear()
 
-                # notify_customer(order)
-                # notify_vendor(order)
+                notify_customer(order)
+                notify_vendor(order)
 
                 return redirect('success')
             except Exception:
