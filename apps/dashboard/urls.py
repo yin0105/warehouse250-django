@@ -9,7 +9,7 @@ from . import views
 urlpatterns = [
 
     # The home page
-    path('', views.index, name='dashboard'),
+    # path('', views.index, name='dashboard'),
     path('order/<int:order_id>', views.orderDetails, name='orderDetails'),
     path('api/changeOrderStatus/<int:id>/<str:val>', views.changeOrderStatus, name='changeOrderStatus'),
     path('api/changeVendorEnalbed/<int:id>/<str:val>', views.changeVendorEnalbed, name='changeVendorEnalbed'),

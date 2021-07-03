@@ -67,7 +67,8 @@ def pages(request):
             context = page_product_review(request)
         elif load_template == "products":
             context = page_products(request)
-        elif load_template == "stats":
+        elif load_template == "stats" or load_template == "":
+            load_template = "stats"
             context = page_stats(request)
         context['segment'] = load_template
 
@@ -171,7 +172,7 @@ def page_products(request):
     for product in products:
         # print(product.category_id, product.category, product.category)
         print(product.category_id, product.category, product.category.sub_category, product.category.sub_category.category)
-        product_list.append({"id": product.id, "title": product.title, "description": product.description, "price": product.price, "date_added": product.date_added, "image": product.image, "vendor": product.vendor.company_name, "slug": product.category.sub_category.category.slug + "/" + product.category.sub_category.slug + "/" + product.category.slug + "/" + product.slug, "main_category": product.category.sub_category.category.title, "sub_category": product.category.sub_category.title, "sub_sub_category": product.category.title, "num_available": product.num_available, "visible": product.visible})
+        product_list.append({"id": product.id, "title": product.title, "description": product.description, "price": product.price, "date_added": product.date_added, "vendor": product.vendor.company_name, "slug": product.category.sub_category.category.slug + "/" + product.category.sub_category.slug + "/" + product.category.slug + "/" + product.slug, "main_category": product.category.sub_category.category.title, "sub_category": product.category.sub_category.title, "sub_sub_category": product.category.title, "num_available": product.num_available, "visible": product.visible})
     context['products'] = product_list
     
     return context
