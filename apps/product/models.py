@@ -93,7 +93,6 @@ class Product(models.Model):
     def get_thumbnail(self):
         try:
             product_image = ProductImage.objects.filter(product=self.id).first()
-            print("product_image")
             if product_image.thumbnail:
                 return product_image.thumbnail.url
             else:

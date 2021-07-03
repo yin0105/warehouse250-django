@@ -20,7 +20,7 @@ from apps.product.models import Product
 from apps.cart.cart import Cart
 from apps.product.models import ProductImage
 
-# @login_required(login_url="/login/")
+@login_required(login_url="/login/")
 def index(request):
     
     context = {}
@@ -29,27 +29,29 @@ def index(request):
     html_template = loader.get_template( 'index.html' )
     return HttpResponse(html_template.render(context, request))
 
-
+@login_required(login_url="/login/")
 def changeOrderStatus(request, id, val):
     Order.objects.filter(id=id).update(status=val)
     return HttpResponse("")
 
-
+@login_required(login_url="/login/")
 def changeVendorEnalbed(request, id, val):
     Vendor.objects.filter(id=id).update(enabled=val)
     return HttpResponse("")   
- 
+
+@login_required(login_url="/login/")
 def changeProductVisible(request, id, val):
     print(id, val)
     Product.objects.filter(id=id).update(visible=val)
     return HttpResponse("")   
-    
+
+@login_required(login_url="/login/")   
 def changeProductLimit(request, id, val):
     print(id, val)
     Vendor.objects.filter(id=id).update(products_limit=val)
     return HttpResponse("") 
 
-# @login_required(login_url="/login/")
+@login_required(login_url="/login/")
 def pages(request):
     context = {}
     # All resource paths end in .html.
@@ -85,6 +87,7 @@ def pages(request):
     #     return HttpResponse(html_template.render(context, request))
 
 
+@login_required(login_url="/login/")
 def page_orders(request):
     context = {}
     orders = Order.objects.all().order_by("-id")
@@ -126,6 +129,7 @@ def page_orders(request):
     return context
 
 
+@login_required(login_url="/login/")
 def page_vendors(request):
     context = {}
     vendors = Vendor.objects.all()
@@ -140,6 +144,7 @@ def page_vendors(request):
     return context
 
 
+@login_required(login_url="/login/")
 def page_customers(request):
     context = {}
     customers = Customer.objects.all()
@@ -150,7 +155,7 @@ def page_customers(request):
     
     return context
 
-
+@login_required(login_url="/login/")
 def page_product_review(request):
     context = {}
     products = Product.objects.filter(visible=False)
@@ -164,7 +169,7 @@ def page_product_review(request):
     
     return context
 
-
+@login_required(login_url="/login/")
 def page_products(request):
     context = {}
     products = Product.objects.filter(visible=True)
@@ -177,7 +182,7 @@ def page_products(request):
     
     return context
 
-
+@login_required(login_url="/login/")
 def page_stats(request):
     context = {}
     today = datetime.date.today()
@@ -204,6 +209,7 @@ def page_stats(request):
     return context
 
 
+@login_required(login_url="/login/")
 def product_admin(request, category_slug, subcategory_slug, subsubcategory_slug, product_slug):
     cart = Cart(request)
 
@@ -221,6 +227,7 @@ def product_admin(request, category_slug, subcategory_slug, subsubcategory_slug,
     return render(request, 'product/product_admin.html', {'product': product, 'imgs': product_imgs})
 
 
+@login_required(login_url="/login/")
 def orderDetails(request, order_id):
     context = {}
     order = Order.objects.filter(id=order_id).first()

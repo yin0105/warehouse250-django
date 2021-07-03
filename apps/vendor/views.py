@@ -50,6 +50,13 @@ def login_request(request):
 
         if user:
             login(request, user)
+            if user.is_superuser:
+                print("=== superuser")
+                try:
+                    request.session['username'] = username.username
+                except:
+                    pass
+                return redirect("/dashboard/")
             try:
                 customer = Customer.objects.get(email=username)
                 request.session['username'] = customer.customername
@@ -319,12 +326,9 @@ def edit_productimage(request, pk):
     if request.method == 'POST':
         
         form = ProductImageForm(request.POST, request.FILES)
-        print(" ================= ")
-        print('========= pk = ', pk)
         if "image" in request.FILES and len(request.FILES["image"]) > 0:
             product = Product.objects.get(id=pk)
             product_image = ProductImage.objects.create(product=product, image=request.FILES["image"])
-            print(product_image)
         # product_image.save()
         # if form.is_valid():
         #     form.save()

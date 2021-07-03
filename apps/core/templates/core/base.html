@@ -251,7 +251,9 @@
                </ul> -->
                <div class="navbar-item">                        
                 {% if request.user.is_authenticated%}
-                    {% if request.session.customer %}
+                    {% if request.user.is_superuser%}
+                        <a href="/dashboard/" class="button is-dark">{{ request.session.username }}</a>
+                    {% elif request.session.customer %}
                         <a href="{% url 'myaccount' %}" class="button is-dark">{{ request.session.username }}</a>
                     {% else %}
                         <a href="{% url 'vendor_admin' %}" class="button is-dark">{{ request.session.username }}</a>
