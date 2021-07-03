@@ -59,7 +59,10 @@
                                     {{ product.discount }} %
                                 {% endif %}
                             </td>
-                            <td><a href="{% url 'edit_product' product.id %}">Edit</a></td>
+                            <td>
+                                <a href="{% url 'edit_product' product.id %}" class="mr-5">Edit</a>
+                                <a href="{% url 'edit_productimage' product.id %}">Edit Images</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

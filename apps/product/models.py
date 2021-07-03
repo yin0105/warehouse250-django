@@ -75,8 +75,8 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=6, decimal_places=0)
     date_added = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='uploads/', blank=True, null=True)
-    thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    # image = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    # thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     num_available = models.IntegerField(default=1)
     num_visits = models.IntegerField(default=0)
@@ -84,8 +84,6 @@ class Product(models.Model):
     pickup_available = models.BooleanField(default=False)
     visible = models.BooleanField(default=False) 
     discount = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
-    # image_2 = models.ForeignKey('ProductImage', on_delete=models.CASCADE)
-
     class Meta:
         ordering = ['-date_added']
 
@@ -93,16 +91,22 @@ class Product(models.Model):
         return self.title
 
     def get_thumbnail(self):
-        if self.thumbnail:
-            return self.thumbnail.url
-        else:
-            if self.image:
-                self.thumbnail = self.make_thumbnail(self.image)
-                self.save()
-
-                return self.thumbnail.url
+        try:
+            product_image = ProductImage.objects.filter(product=self.id).first()
+            print("product_image")
+            if product_image.thumbnail:
+                return product_image.thumbnail.url
             else:
-                return 'https://via.placeholder.com/240x180.jpg'
+                if product_image.image:
+                    product_image.thumbnail = self.make_thumbnail(self.image)
+                    product_image.save()
+
+                    return product_image.thumbnail.url
+                else:
+                    return 'https://via.placeholder.com/240x180.jpg'
+        except:
+            return 'https://via.placeholder.com/240x180.jpg'
+
 
     def get_absolute_url(self):
         return '/%s/%s' % (self.category.slug, self.slug)

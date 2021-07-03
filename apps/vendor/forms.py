@@ -4,15 +4,21 @@ from django import forms
 
 from django.contrib.auth.models import User
 
-from apps.product.models import Product
+from apps.product.models import Product,ProductImage
 from .models import Vendor, Customer
 
 
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'image', 'title',
+        fields = ['category', 'title',
+        # fields = ['category', 'image', 'title',
                   'description', 'price', 'discount', 'num_available', 'pickup_available']
+
+class ProductImageForm(ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = ['image']
 
 
 # Vendor Sign Up Form

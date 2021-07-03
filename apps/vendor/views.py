@@ -9,10 +9,10 @@ from django.utils.text import slugify
 
 from django.contrib.auth.models import User
 from .models import Vendor, Customer
-from apps.product.models import Product
+from apps.product.models import Product, ProductImage
 from apps.order.models import Order, OrderItem
 
-from .forms import ProductForm, VendorSignUpForm, CustomerSignUpForm, RestorePasswordForm, RequestRestorePasswordForm
+from .forms import ProductForm, ProductImageForm, VendorSignUpForm, CustomerSignUpForm, RestorePasswordForm, RequestRestorePasswordForm
 
 from django.utils.encoding import force_text
 
@@ -308,6 +308,57 @@ def edit_product(request, pk):
         form = ProductForm(instance=product)
 
     return render(request, 'vendor/edit_product.html', {'form': form, 'product': product})
+
+
+@login_required
+def edit_productimage(request, pk):
+    vendor = request.user.vendor
+    # product = vendor.products.get(pk=pk)
+    product_images = ProductImage.objects.filter(product=pk)
+    
+    if request.method == 'POST':
+        
+        form = ProductImageForm(request.POST, request.FILES)
+        print(" ================= ")
+        print('========= pk = ', pk)
+        if "image" in request.FILES and len(request.FILES["image"]) > 0:
+            product = Product.objects.get(id=pk)
+            product_image = ProductImage.objects.create(product=product, image=request.FILES["image"])
+            print(product_image)
+        # product_image.save()
+        # if form.is_valid():
+        #     form.save()
+
+        return redirect('vendor_admin')
+    else:
+        form = ProductImageForm()
+
+    return render(request, 'vendor/edit_productimage.html', {'product_images': product_images, 'form': form})
+
+
+@login_required
+def del_productimage(request, pk):
+    vendor = request.user.vendor
+    # product = vendor.products.get(pk=pk)
+    product_image = ProductImage.objects.filter(id=pk).first()
+    product_id = product_image.product.id
+    product_image.delete()
+    product_images = ProductImage.objects.filter(product=product_id)
+
+
+    # if request.method == 'POST':
+    #     form = ProductForm(request.POST, request.FILES, instance=product)
+
+    #     if form.is_valid():
+    #         form.save()
+
+    #         return redirect('vendor_admin')
+    # else:
+    #     form = ProductForm(instance=product)
+
+    # return render(request, 'vendor/edit_productimage.html', {'product_images': product_images})
+    return redirect("edit_productimage", pk=product_id)
+
 
 
 @login_required

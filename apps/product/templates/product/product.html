@@ -10,7 +10,7 @@
         <!-- Thumbnails -->
         <div class="column is-1"> 
             <!--  carousel-indicators -->
-            <button
+            <!-- <button
             type="button"
             data-mdb-target="#carouselExampleIndicators"
             data-mdb-slide-to="0"
@@ -24,12 +24,12 @@
                 src="{{ product.image.url }}"
                 class="img-fluid"
             />
-            </button>
+            </button> -->
             {% for img in imgs %}
                 <button
                 type="button"
                 data-mdb-target="#carouselExampleIndicators"
-                data-mdb-slide-to="{{ forloop.counter }}"
+                data-mdb-slide-to="{{ forloop.counter0 }}"
                 aria-label="Slide 2"
                 style="width: 100px;"
                 >
@@ -42,7 +42,6 @@
             {% endfor %}
         </div>
         <div class="column is-6">
-            {% if product.image %}
                 <!-- <figure class="image is-4by3 mb-6">
                     <img src="{{ product.image.url }}">
                 </figure> -->
@@ -54,13 +53,17 @@
                 >
                 <!-- Slides -->
                     <div class="carousel-inner mb-5">
-                        <div class="carousel-item active">
+                        <!-- <div class="carousel-item active">
                             <figure class="image is-4by3 mb-6">
                                 <img src="{{ product.image.url }}">
                             </figure>
-                        </div>
+                        </div> -->
                         {% for img in imgs %}
-                            <div class="carousel-item">
+                            {% if forloop.counter == 1 %}
+                                <div class="carousel-item active">
+                            {% else %}
+                                <div class="carousel-item">
+                            {% endif %}
                                 <figure class="image is-4by3 mb-6">
                                     <img src="{{ img.image.url }}">
                                 </figure>
@@ -94,7 +97,6 @@
                 <!-- Thumbnails -->
                 </div>
                 
-            {% endif %}
         </div>
 
         <div class="column is-5">

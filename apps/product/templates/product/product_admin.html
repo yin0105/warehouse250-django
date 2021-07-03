@@ -10,7 +10,7 @@
         <!-- Thumbnails -->
         <div class="column is-1"> 
             <!--  carousel-indicators -->
-            <button
+            <!-- <button
             type="button"
             data-mdb-target="#carouselExampleIndicators"
             data-mdb-slide-to="0"
@@ -24,7 +24,7 @@
                 src="{{ product.image.url }}"
                 class="img-fluid"
             />
-            </button>
+            </button> -->
             {% for img in imgs %}
                 <button
                 type="button"
@@ -54,11 +54,11 @@
                 >
                 <!-- Slides -->
                     <div class="carousel-inner mb-5">
-                        <div class="carousel-item active">
+                        <!-- <div class="carousel-item active">
                             <figure class="image is-4by3 mb-6">
                                 <img src="{{ product.image.url }}">
                             </figure>
-                        </div>
+                        </div> -->
                         {% for img in imgs %}
                             <div class="carousel-item">
                                 <figure class="image is-4by3 mb-6">
